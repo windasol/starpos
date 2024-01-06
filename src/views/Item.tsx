@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import {type ItemInfo, equipData} from '../../public/Common/CommonItem';
 
 type Props = {
     row: number;
@@ -6,8 +7,11 @@ type Props = {
 }
 
 function Item({row, col} : Props) {
+  const [items, setItems] = useState<ItemInfo[]>(equipData);
   const numRows = row;
   const numColumns = col;
+
+  console.log(items);
 
   const renderRows = () => {
     const rows = [];
@@ -24,13 +28,14 @@ function Item({row, col} : Props) {
     }
     return rows;
   };
-
-  // 각 행의 셀을 생성하는 함수
+  
   const renderColumns = () => {
     const columns = [];
     for (let j = 0; j < numColumns; j++) {
       columns.push(        
-        <td key={j} className='itemTable'></td>        
+        <td key={j} className='itemTable'>
+          
+        </td>        
       );
     }
 
