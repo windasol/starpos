@@ -1,3 +1,5 @@
+import img from '../assets/images/sword.png'
+
 export interface ItemInfo {
     type: string;
     equip?: EquipInfo;
@@ -16,8 +18,9 @@ export interface EquipInfo {
     changeYn?: boolean;
     potential?: [];
     additional?: [];
-    job?: string;
+    job: string;
     stats?: EquipStats;
+    img: string;
 }
 
 export interface EquipStats {
@@ -36,6 +39,7 @@ export interface SpendInfo {
     name: string;
     description: string;
     count: number;
+    img: string;
 }
 
 export interface EtcInfo {
@@ -43,6 +47,7 @@ export interface EtcInfo {
     name: string;
     description: string;
     count: number;
+    img: string;
 }
 
 export interface CashInfo {
@@ -57,6 +62,7 @@ export interface CashInfo {
     magicPower?: number;
     bossPower?: number;
     guardIgnore?: number; 
+    img: string;
 } 
 
 export const equipData :ItemInfo[] = [
@@ -65,9 +71,11 @@ export const equipData :ItemInfo[] = [
         type: 'equip',
         equip: {
             order: 1,
-            name: 'sword',
-            level: 100,
+            name: '검',
+            level: 1,
             starpos: 0,
+            job: 'all',
+            img: '/images/sword.png',
         },
     },
     // 카루타 
@@ -75,36 +83,40 @@ export const equipData :ItemInfo[] = [
         type: 'equip',
         equip :  {
             order: 2,
-            name: 'cloth',
+            name: '이글아이 워리어 아머',
             level: 150,
             starpos: 0,
-
+            job: 'warrior',
+            img: '/images/lutavis-thief-top.png',
         }
     },
     {
         type: 'spend',
         spend : {
             order: 1,
-            name: 'red portion',
+            name: '빨간포션',
             count: 1,
             description: '이것은 빨간포션 입니다',
+            img: '/images/redportion.png',
         }
     },
     {
         type: 'cash',
         cash: {
             order: 2,
-            name: 'master label',
+            name: '죽음의 데스',
             level: 0,
+            img: '/images/deathOfDie.png',
         }
     },
     {
         type: 'etc',
         etc: {
             order: 1,
-            name: 'newbie book',
-            count: 1,
-            description: '초보자를 위한 육성 가이드 입니다!'
+            name: '주문의 흔적',
+            count: 9000,
+            description: '낡은 종이에 과거에 사용했던 주문의 흔적이 남아있다. 상점에 팔면 약간의 메소를 얻을수 있다.',
+            img: '/images/spellTrace.png',
         }
     },
 ];

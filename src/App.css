@@ -53,6 +53,7 @@ tr,
 td {  
   width: 65px;
   height: 30px;
+  cursor: grabbing;
 }
 
 
@@ -61,5 +62,30 @@ td {
   height: 400px;
   position: absolute;
   border: solid black;
-  background-Color: white;
+  background-Color: white;  
+}
+
+.itemButton {
+  width: 65px;
+  font-size: 11px;
+  margin-right: 1em
+}
+
+.itemImg {
+  width: 40px;
+  height: 30px;
+}
+
+.showItemIng {
+  width: 80px;
+  height: 80px;
+}
+
+.itemTop {
+  display: flex;
+  height: 30px;
+  background: black;
+  opacity: 80%;
+  color: orange;
+  cursor: pointer;
 }
