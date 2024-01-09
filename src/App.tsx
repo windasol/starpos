@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import Item from './views/Item'
+import ItemUpgrade from './views/ItemEnchant'
+import DragMove from './views/DragMove'
 
 function App() {
   const table = {row: 10, col: 4}
@@ -10,7 +12,7 @@ function App() {
     setType(itemType);
   }
 
-  function handler(event: KeyboardEvent) {
+  function keydownHandler(event: KeyboardEvent) {
     const key = event.key;
     if (key == 'i') {
       setShow(!show);
@@ -21,24 +23,29 @@ function App() {
     setShow(flag);
   }
 
+
   function showItem() {
     if (show) {
       return (
-        <Item {...table} itemType={type} setItemType={setItemType} showFlag={(e) => {close(e)}}/>
+        <div draggable="false" className='noneDrag' >
+          <Item {...table} itemType={type} setItemType={setItemType} showFlag={(e) => {close(e)}} />
+        </div>
       )
     }
   }
 
   useEffect(() => {
-    window.addEventListener('keydown', handler);
+    window.addEventListener('keydown', keydownHandler);    
     return() => {
-      window.removeEventListener('keydown', handler);
+      window.removeEventListener('keydown', keydownHandler);      
     }
   })
 
   return (    
     <>
-     {showItem()}
+     {showItem()}        
+     <ItemUpgrade/>       
+     <DragMove />      
     </>
   )
 }

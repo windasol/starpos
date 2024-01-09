@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {type ItemInfo, equipData} from '../common/CommonItem';
 import { jobType } from '../common/JobOption';
 
@@ -13,6 +13,8 @@ type Props = {
 function Item({row, col, itemType, setItemType, showFlag} : Props) {
   const [items, setItems] = useState<ItemInfo[]>(equipData);  
   const [showInfo, setShowInfo] = useState(0);  
+  const [x,  setX] = useState(0);
+  const [y,  setY] = useState(0);  
   const numRows = row;
   const numColumns = col;
 
@@ -120,17 +122,17 @@ function Item({row, col, itemType, setItemType, showFlag} : Props) {
 
   return (
     <>
-        <div className='bigTable'>    
-            <div className='itemTop'>
-              <div style={{width: '80%', marginLeft: '3em'}}>ItemInventory</div>
-              <div style={{width: '20%', cursor: 'pointer'}} onClick={() => {showFlag(false)}}>x</div>
-            </div>
-            <button className="itemButton" style={typeStyle('equip')} onClick={() => setItemType('equip')}>장비</button>
-            <button className="itemButton" style={typeStyle('spend')} onClick={() => setItemType('spend')}>소비</button>
-            <button className="itemButton" style={typeStyle('etc')} onClick={() => setItemType('etc')}>기타</button>
-            <button className="itemButton" style={typeStyle('cash')} onClick={() => setItemType('cash')}>캐쉬</button>
-            {renderRows()}    
-        </div>    
+    <div className='bigTable' draggable="false">    
+        <div className='itemTop'>
+          <div style={{width: '80%', marginLeft: '3em'}} draggable="false">Item Inventory</div>
+          <div style={{width: '20%', cursor: 'pointer'}} onClick={() => {showFlag(false)}}>x</div>
+        </div>
+        <button className="itemButton" style={typeStyle('equip')} onClick={() => setItemType('equip')}>장비</button>
+        <button className="itemButton" style={typeStyle('spend')} onClick={() => setItemType('spend')}>소비</button>
+        <button className="itemButton" style={typeStyle('etc')} onClick={() => setItemType('etc')}>기타</button>
+        <button className="itemButton" style={typeStyle('cash')} onClick={() => setItemType('cash')}>캐쉬</button>
+        {renderRows()}    
+    </div>            
     </>
   )
 }
