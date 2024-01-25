@@ -8,6 +8,7 @@ function App() {
   const table = {row: 10, col: 4}
   const [type, setType] = useState('equip');
   const [show, setShow] = useState(true);
+  const [position, setPosition] = useState({x: 0, y: 0});
   function setItemType(itemType: string) {
     setType(itemType);
   }
@@ -27,8 +28,8 @@ function App() {
   function showItem() {
     if (show) {
       return (
-        <div draggable="false" className='noneDrag' >
-          <Item {...table} itemType={type} setItemType={setItemType} showFlag={(e) => {close(e)}} />
+        <div draggable="false" className='noneDrag'>
+          <Item {...table} itemType={type} setItemType={setItemType} showFlag={(e) => {close(e)}} remindPosition={(e) => {setPosition(e)}}/>
         </div>
       )
     }
@@ -44,8 +45,7 @@ function App() {
   return (    
     <>
      {showItem()}        
-     <ItemUpgrade/>       
-     <DragMove />      
+     <ItemUpgrade/>            
     </>
   )
 }
