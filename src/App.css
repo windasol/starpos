@@ -95,27 +95,25 @@ td {
   position: absolute;
   justify-content: center;
   align-items: center;  
-  width: 400px;
-  height: 350px;
+  /* width: 400px; */
+  height: 314px;
   top: 50%;
   left: 50%;
   border: solid black;
-  background-color: #626000;
+  background-color: white;
   border-radius: 10px;  
 }
 
 .inner-box {  
   justify-content: center;
   align-items: center;  
-  width: 150px;
-  height: 100px;
+  height: 230px;
   top: 50%;
   left: 50%;
   border: solid skyblue;
   background-color: skyblue;
   border-radius: 10px;
-  margin-left: 25%;    
-  margin-top: 18%;
+  margin: 10%;
 }
 
 .noneDrag{
@@ -124,3 +122,21 @@ td {
   -ms-use-select: none;
   user-select: none;
  }
+
+ .outer-square {  
+  height: 320px; /* 원하는 크기로 조절하세요 */
+  background-color: #626000;
+  position: relative;
+}
+
+/* 내부 정사각형 스타일 */
+.inner-square {
+  /* width: 140px; 
+  height: 140px; */
+  /* background-color: #3498db; */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;  
+}

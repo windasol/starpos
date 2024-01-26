@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {type ItemInfo, equipData} from '../common/CommonItem';
-import DragMove from './DragMove';
 import { jobType } from '../common/JobOption';
 
 type Props = {
@@ -8,16 +7,12 @@ type Props = {
     col: number;
     itemType: string;
     setItemType: (itemType: string) => void;
-    showFlag: (flag: boolean) => void;
-    remindPosition: object;
+    showFlag: (flag: boolean) => void;    
 }
 
-function Item({row, col, itemType, setItemType, showFlag, remindPosition} : Props) {
+function Item({row, col, itemType, setItemType, showFlag} : Props) {
   const [items, setItems] = useState<ItemInfo[]>(equipData);  
-  const [showInfo, setShowInfo] = useState(0);  
-  const [dragging, setDragging] = useState(false);
-  const [position, setPosition] = useState({ x: 500, y: 100 });
-  const [startPosition, setStartPosition] = useState(remindPosition);  
+  const [showInfo, setShowInfo] = useState(0);    
   const numRows = row;
   const numColumns = col;
 
@@ -43,13 +38,10 @@ function Item({row, col, itemType, setItemType, showFlag, remindPosition} : Prop
       const now = ((j + 1) + (tableRow * col));
       const item = items.filter((e) => e.type == itemType).filter((e:any) => e[itemType].order == now)[0]      
       
-
       columns.push(        
-        <td key={j} className='itemTable' onMouseOver={() => {setShowInfo(now)}} onMouseLeave={() => {setShowInfo(0)}}>
-          {/* {item[0] ? item[0][itemType].name : ''}          */}
+        <td key={j} className='itemTable' onMouseOver={() => {setShowInfo(now)}} onMouseLeave={() => {setShowInfo(0)}}>          
           {item ? <img className="itemImg" src={item[itemType].img}></img> : ''}
-          <span>{showCount(item)}</span>
-          {/* {countCheck(item)} */}
+          <span>{showCount(item)}</span>          
           {item && now == showInfo ? showType(item) : ''}         
         </td>        
       );
@@ -122,45 +114,10 @@ function Item({row, col, itemType, setItemType, showFlag, remindPosition} : Prop
   function typeStyle(type: string) {
     return itemType == type ? {border: '1px solid'} : {};
   }
-  
-  const handleMouseDown = (e:MouseEvent) => {
-    setDragging(true);
-    setStartPosition({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleMouseMove = (e:MouseEvent) => {
-    if (dragging) {
-      const deltaX = e.clientX - startPosition.x;
-      const deltaY = e.clientY - startPosition.y;
-
-      setPosition((prevPosition) => ({
-        x: prevPosition.x + deltaX,
-        y: prevPosition.y + deltaY,
-      }));
-
-      setStartPosition({ x: e.clientX, y: e.clientY });
-    }
-  };
-
-  const handleMouseUp = () => {
-    setDragging(false);
-    remindPosition(position);
-  };
-
-  useEffect(() => {
-    window.addEventListener('mouseup', handleMouseUp);        
-    window.addEventListener('mousemove', handleMouseMove);    
-    return() => {
-      window.removeEventListener('mouseup', handleMouseUp);            
-      window.removeEventListener('mousemove', handleMouseMove);    
-    }
-  })
 
   function itemHead() {
     return (
-      <div className='itemTop'
-        onMouseDown={(e) => {handleMouseDown(e)}}        
-        >
+      <div className='itemTop'>
         <div style={{width: '80%', marginLeft: '3em'}} draggable="false">Item Inventory</div>
         <div style={{width: '20%', cursor: 'pointer'}} onClick={() => {showFlag(false)}}>x</div>
       </div>      
@@ -168,11 +125,7 @@ function Item({row, col, itemType, setItemType, showFlag, remindPosition} : Prop
   }
 
   return (    
-    <div className='bigTable' draggable="false"  style={{        
-          position: 'absolute',
-          top: `${position.y}px`,
-          left: `${position.x}px`,        
-        }}>       
+    <div className='bigTable'>       
         {itemHead()}
         <button className="itemButton" style={typeStyle('equip')} onClick={() => setItemType('equip')}>장비</button>
         <button className="itemButton" style={typeStyle('spend')} onClick={() => setItemType('spend')}>소비</button>

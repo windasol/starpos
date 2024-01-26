@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import Item from './Item';
+import React, { ReactNode, useState } from 'react';
+import { type coordinate } from '../common/typeOption';
 
-const DragMove = () => {
+interface Props {
+  htmlContent: ReactNode;
+  initPosition: coordinate;
+  remindPosition: (position: coordinate) => void;    
+}
+
+const DragMove = ({htmlContent, initPosition, remindPosition} : Props) => {
   const [dragging, setDragging] = useState(false);
-  const [position, setPosition] = useState({ x: 500, y: 100 });
-  const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });  
-  const table = {row: 10, col: 4}
-  const [type, setType] = useState('equip');
-  const [show, setShow] = useState(true);
-  function setItemType(itemType: string) {
-    setType(itemType);
-  }      
-
+  const [position, setPosition] = useState(initPosition);
+  const [startPosition, setStartPosition] = useState({x: 500, y:500});
+  
   const handleMouseDown = (e:MouseEvent) => {
     setDragging(true);
     setStartPosition({ x: e.clientX, y: e.clientY });
   };
 
   const handleMouseMove = (e:MouseEvent) => {
-    if (dragging) {
+    if (dragging) {      
       const deltaX = e.clientX - startPosition.x;
       const deltaY = e.clientY - startPosition.y;
 
@@ -33,10 +33,13 @@ const DragMove = () => {
 
   const handleMouseUp = () => {
     setDragging(false);
+    remindPosition(position);
   };
 
   return (
-    <div
+    <span
+      className='noneDrag'
+      draggable={false}
       style={{        
         position: 'absolute',
         top: `${position.y}px`,
@@ -46,8 +49,8 @@ const DragMove = () => {
       onMouseMove={(e) => {handleMouseMove}}
       onMouseUp={handleMouseUp}
     >         
-     <Item {...table} itemType={type} setItemType={setItemType} showFlag={(e) => {close(e)}} remindPosition={position}/>    
-    </div>
+     {htmlContent}
+    </span>
   );
 };
 
