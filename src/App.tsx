@@ -4,13 +4,15 @@ import Item from "./views/Item";
 import ItemEnchant from "./views/ItemEnchant";
 import Dragable from "./views/Dragable";
 import { type positionType } from "./common/typeOption";
+import { type ItemInfo } from "./common/CommonItem";
 
 function App() {
   const itemTable = { row: 10, col: 4 };
   const [type, setType] = useState("equip");
   const [showFlag, setShowFlag] = useState({ item: false, enchant: false });
   const [position, setPosition] = useState<positionType>({ item : {x: 200, y: 100 }, enchant : {x: 700, y: 100}})  
-  const [move, setMove] = useState(true);
+  const [move, setMove] = useState({item : false, enchant : false});
+  const [dropItem, setDropItem] = useState<ItemInfo>();
 
   function setItemType(itemType: string) {
     setType(itemType);
@@ -28,18 +30,20 @@ function App() {
   function loadItem() {
     if (showFlag.item) {
       return (
-        <Dragable
-          htmlContent={
-            <div draggable="false" className="noneDrag">
-              <Item
-                {...itemTable}
-                itemType={type}
-                setItemType={setItemType}
-                showFlag={(e) => {
-                  setShowFlag({ ...showFlag, item: e })
-                }}
-              />
-            </div>
+        <Dragable        
+        flag={move.item}
+          htmlContent={            
+            <Item
+              {...itemTable}
+              itemType={type}
+              setItemType={setItemType}
+              showFlag={(e) => {
+                setShowFlag({ ...showFlag, item: e })
+              }}
+              moveFlag={(e) => setMove({...move, item: e})}
+              dropItem={(e) => setDropItem(e)}
+              position={position}
+            />            
           }
           initPosition={position.item}
           remindPosition={(e) => {
@@ -53,13 +57,19 @@ function App() {
   function loadEnchant() {
     if (showFlag.enchant) {
       return (
-        <Dragable 
-          flag={move}
-          htmlContent={<ItemEnchant showFlag={(e) => {setShowFlag({ ...showFlag, enchant: e })}} moveFlag={(e) => setMove(e)}/>}  
-          initPosition={position.enchant}
-          remindPosition={(e) => {
-            setPosition({...position, enchant: e});
-        }}/>            
+        <Dragable         
+          flag={move.enchant}
+          htmlContent={
+            <ItemEnchant     
+              item={dropItem}          
+              showFlag={(e) => {setShowFlag({ ...showFlag, enchant: e })}} 
+              moveFlag={(e) => setMove({...move, enchant: e})}/>}  
+              initPosition={position.enchant}
+              remindPosition={(e) => {
+              setPosition({...position, enchant: e});              
+          }}
+          
+        />            
       )
     }
   }

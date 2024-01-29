@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {type ItemInfo, equipData} from '../common/CommonItem';
 import { jobType } from '../common/JobOption';
+import { positionType } from '../common/typeOption';
 
 type Props = {
     row: number;
@@ -8,9 +9,12 @@ type Props = {
     itemType: string;
     setItemType: (itemType: string) => void;
     showFlag: (flag: boolean) => void;    
+    moveFlag: (flag: boolean) => void; 
+    dropItem: (item: ItemInfo) => void;
+    position: positionType;
 }
 
-function Item({row, col, itemType, setItemType, showFlag} : Props) {
+function Item({row, col, itemType, setItemType, showFlag, moveFlag, dropItem, position} : Props) {
   const [items, setItems] = useState<ItemInfo[]>(equipData);  
   const [showInfo, setShowInfo] = useState(0);    
   const numRows = row;
@@ -39,8 +43,8 @@ function Item({row, col, itemType, setItemType, showFlag} : Props) {
       const item = items.filter((e) => e.type == itemType).filter((e:any) => e[itemType].order == now)[0]      
       
       columns.push(        
-        <td key={j} className='itemTable' onMouseOver={() => {setShowInfo(now)}} onMouseLeave={() => {setShowInfo(0)}}>          
-          {item ? <img className="itemImg" src={item[itemType].img}></img> : ''}
+        <td key={j} className='itemTable' onMouseDown={() => {setShowInfo(0)}} onMouseOver={() => {setShowInfo(now)}} onMouseLeave={() => {setShowInfo(0)}}>          
+          {item ? <img className="itemImg" onDragEnd={() => imgDrop(item)} src={item[itemType].img}></img> : ''}
           <span>{showCount(item)}</span>          
           {item && now == showInfo ? showType(item) : ''}         
         </td>        
@@ -50,6 +54,26 @@ function Item({row, col, itemType, setItemType, showFlag} : Props) {
     return columns;
   }
   
+  function imgDrop(item: ItemInfo) {
+    // const { top, left } = e.currentTarget.getBoundingClientRect();
+    // const x = e.clientX - left;
+    // const y = e.clientY - top;
+
+    // console.log(top)
+    // console.log(left)
+    // console.log(position.enchant);
+
+    // // 좌표가 해당 범위 안에 있는지 확인
+    // if (x >= position.enchant.x && y >= position.enchant.y ) {
+    //   alert('알림: 드래그가 40px, 40px 위치에서 종료되었습니다.');
+    // }
+    
+    // if (x <= position.enchant.x && y <= position.enchant.y) {
+      // }
+      dropItem(item);
+
+  }
+
   function showCount(info: ItemInfo) {
     if (info) {
       if (info[itemType].count) {
@@ -117,7 +141,7 @@ function Item({row, col, itemType, setItemType, showFlag} : Props) {
 
   function itemHead() {
     return (
-      <div className='itemTop'>
+      <div className='itemTop' onMouseDown={(e) => moveFlag(true)} onMouseUp={(e) => moveFlag(false)}>
         <div style={{width: '80%', marginLeft: '3em'}} draggable="false">Item Inventory</div>
         <div style={{width: '20%', cursor: 'pointer'}} onClick={() => {showFlag(false)}}>x</div>
       </div>      

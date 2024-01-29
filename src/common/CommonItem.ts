@@ -1,5 +1,3 @@
-import img from '../assets/images/sword.png'
-
 export interface ItemInfo {
     type: string;
     equip?: EquipInfo;
@@ -13,6 +11,7 @@ export interface EquipInfo {
     name: string;
     level: number;
     starpos: number;
+    maxStarpos: number;
     changeCount?: number;
     upgradeCount?: number;
     changeYn?: boolean;
@@ -74,6 +73,7 @@ export const equipData :ItemInfo[] = [
             name: '검',
             level: 1,
             starpos: 0,
+            maxStarpos: 5,
             job: 'all',
             img: '/images/sword.png',
         },
@@ -86,6 +86,7 @@ export const equipData :ItemInfo[] = [
             name: '이글아이 워리어 아머',
             level: 150,
             starpos: 0,
+            maxStarpos: 25,
             job: 'warrior',
             img: '/images/lutavis-thief-top.png',
         }
