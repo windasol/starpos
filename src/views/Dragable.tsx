@@ -13,7 +13,7 @@ function Dragable({htmlContent, remindPosition, initPosition, flag} : Props) {
   const [position, setPosition] = useState(initPosition);
   const [startPosition, setStartPosition] = useState({x: 500, y:500});    
 
-  const handleMouseDown = (e: MouseEvent) => {  
+  const handleMouseDown = (e: React.MouseEvent) => {  
     setDragging(true);
     setStartPosition({ x: e.clientX, y: e.clientY });    
   };
