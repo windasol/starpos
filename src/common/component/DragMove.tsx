@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from 'react';
-import { type coordinate } from '../common/typeOption';
+import { type coordinate } from '../option/typeOption';
 
 interface Props {
   htmlContent: ReactNode;

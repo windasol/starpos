@@ -3,9 +3,9 @@ import "./css/App.css"
 import "./css/pop.scss"
 import Item from "./views/Item";
 import ItemEnchant from "./views/ItemEnchant";
-import Dragable from "./views/Dragable";
-import { type positionType } from "./common/typeOption";
-import { type ItemInfo } from "./common/CommonItem";
+import Dragable from "./common/component/Dragable";
+import { type positionType } from "./common/option/typeOption";
+import { type ItemInfo } from "./common/option/CommonItem";
 
 function App() {
   const itemTable = { row: 10, col: 4 };
@@ -17,7 +17,7 @@ function App() {
   });
   const [move, setMove] = useState({ item: false, enchant: false });
   const [dropItem, setDropItem] = useState<ItemInfo>();
-
+  
   function setItemType(itemType: string) {
     setType(itemType);
   }
@@ -50,7 +50,7 @@ function App() {
             />
           }
           initPosition={position.item}
-          remindPosition={(e) => {
+          remindPosition={(e) => {            
             setPosition({ ...position, item: e });
           }}
         />

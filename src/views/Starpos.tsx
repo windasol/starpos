@@ -1,18 +1,54 @@
 import { useEffect, useRef, useState } from "react";
-import { ItemInfo } from "../common/CommonItem";
+import { ItemInfo } from "../common/option/CommonItem";
+import { starposPercentage } from "../common/option/CommonItem";
 
 type Props = {
   item?: ItemInfo;
+  setItem: (item: ItemInfo) => void;
+  isShow: (flag: boolean) => void;
+  success: (flag: boolean) => void;
+  
 };
 
-function Starpos({ item }: Props) {
+function Starpos({ item, isShow, success, setItem }: Props) {  
   const [tarsnform, setTransform] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [count, setCount] = useState(0);  
-  const intervalIdRef = useRef(null);
+  const [count, setCount] = useState(0);    
 
-  useEffect(() => {    
-      const intervalId = setInterval(() => {
+  const intervalIdRef = useRef<number | null>(null);  
+
+  function stopInterval() {
+    if (intervalIdRef.current != null) {
+      window.clearInterval(intervalIdRef.current);
+    }
+  }
+
+  function stop() {           
+    const percent = starposPercentage[item?.equip?.starpos] * 0.1;
+    const randomValue = Math.random() * 10;
+    
+    if (randomValue <= percent) {
+      success(true);
+      item!.equip!.starpos += 1;
+    } else {
+      success(false);      
+    }          
+    stopInterval();
+    isShow(false);
+    setItem(item ?? {} as ItemInfo);
+  }
+
+  function keydownStop(event: KeyboardEvent) {         
+    const key = event.key
+    if (key === ' ') {    
+      event.preventDefault();             
+      stop();                    
+    }   
+  }
+  
+  useEffect(() => {        
+    window.addEventListener("keydown", keydownStop);    
+      intervalIdRef.current = window.setInterval(() => {
         setTransform((prevPosition) => {
           if (prevPosition == 250) {
             setDirection(-1);
@@ -20,27 +56,29 @@ function Starpos({ item }: Props) {
             setDirection(1);
             setCount(count + 1);
           }
-  
           return prevPosition + direction;
         });
       }, 1);
 
       if (count == 8) {
-        clearInterval(intervalId);
+        stop();
+      }        
+      return () => {
+        window.removeEventListener("keydown", keydownStop);        
+        stopInterval();
       }
-      return () => clearInterval(intervalId);    
-  }, [direction]); // direct
-
+  }, [direction, count]); // direct
 
   return (
     <div
+      className="popup"
       style={{
         width: '300px',        
-        zIndex: '999',
-        position: "absolute",
-        backgroundColor: 'gray',        
-      }}
-      >
+        height: '270px',        
+        backgroundImage: 'url(/images/upgradeBackground.png)',
+        marginLeft: '1.5em',
+        marginTop: '2em',
+      }}>
       <p style={{fontSize: '12px', color: 'white'}}>별을 정확한 곳에 멈추면 강화 성공률이 증가하며</p>
       <p style={{fontSize: '12px', color: 'white'}}>연속해서 강화를 시도하면 난이도가 증가합니다.</p>
       <div>
@@ -49,15 +87,14 @@ function Starpos({ item }: Props) {
       <div className="moving-box">
         <div
           style={{
-            transform: `translateX(${tarsnform}px)`,
-            backgroundColor: "blue",
-            width: "50px",
+            transform: `translateX(${tarsnform}px)`,     
+            width: '50px',
           }}
         >
-          star
+          <img src="/images/star.png" style={{width: '35px'}}></img>                  
         </div>
       </div>
-      <button>stop</button>
+      <button onClick={() => stop()}>stop</button>
     </div>
   );
 }

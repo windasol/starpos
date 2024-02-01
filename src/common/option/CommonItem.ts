@@ -63,6 +63,8 @@ export interface CashInfo {
     guardIgnore?: number; 
     img: string;
 } 
+                                  
+export const starposPercentage = [95,90,85,85,80,75,70,65,60,55,50,45,40,35,30,30,30,30,30,30,30,30,30,3,2];
 
 export const equipData :ItemInfo[] = [
     // 검

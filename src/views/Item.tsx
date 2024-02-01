@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import {type ItemInfo, equipData} from '../common/CommonItem';
-import { jobType } from '../common/JobOption';
-import { positionType } from '../common/typeOption';
+import {type ItemInfo, equipData} from '../common/option/CommonItem';
+import { jobType } from '../common/option/JobOption';
+import { positionType } from '../common/option/typeOption';
 
 type Props = {
     row: number;
