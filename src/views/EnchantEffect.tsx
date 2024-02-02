@@ -1,47 +1,89 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from "react";
+import styled, { keyframes } from "styled-components";
 
 type Props = {
-    top: number;
-    left: number;
-    clear: (flag: boolean) => void
+  top: number;
+  left: number;
+  clear: (flag: boolean) => void;
+};
+
+const shineAnimation = keyframes`
+0% {
+  transform: scale(0.2); 
+  opacity: 1;
 }
+25% {
+  transform: scale(0.4); 
+  opacity: 0.9;
+}
+50% {
+  transform: scale(0.7); 
+  opacity: 0.8;
+}
+75% {
+  transform: scale(1); 
+  opacity: 0.7;
+}
+100% {
+  transform: scale(1.5); 
+  opacity: 0;
+}
+`;
 
-const EnchantEffect = ({top, left, clear} : Props) => {
-  const [opacity, setOpacity] = useState(1);
+const ShineEffect = styled.div`
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(#ffff00, transparent);
+  animation: ${shineAnimation} 1s linear forwards;
+`;
 
-  useEffect(() => {    
-    setOpacity(1);
+function EnchantEffect({ top, left, clear }: Props) {
+  const shineEffectRef = useRef<HTMLDivElement>(null);
 
-    const fadeOutInterval = setInterval(() => {
-      setOpacity((prevOpacity) => {
-        if (prevOpacity <= 0) {
-          clearInterval(fadeOutInterval);     
-          clear(true);
-          return 0;
-        }
-        return prevOpacity - 0.1;
-      });
-    }, 120);
-    
-    return () => {    
-      clearInterval(fadeOutInterval);
+  function handleAnimation() {
+    if (shineEffectRef.current) {
+      shineEffectRef.current.addEventListener("animationend", onAnimationEnd);
+    }
+  }
+
+  function onAnimationEnd() {
+    clear(false);
+
+    if (shineEffectRef.current) {
+      shineEffectRef.current.removeEventListener(
+        "animationend",
+        onAnimationEnd
+      );
+    }
+  }
+
+  useEffect(() => {
+    handleAnimation();
+        
+    return () => {
+      if (shineEffectRef.current) {
+        shineEffectRef.current.removeEventListener(
+          "animationend",
+          onAnimationEnd
+        );
+      }
     };
   }, []);
 
   return (
-    <img 
-    src="/images/upgrading.jpg" 
-    style={{
-      width: '80px', 
-      height: '80px', 
-      marginLeft: '0.6em',
-      marginTop: '0.6em',
-      left: `${left}px`, 
-      top: `${top}px`, 
-      position: 'absolute', 
-      opacity: opacity, 
-      transition: 'opacity 0.8s ease-in-out' }} />
+    <div
+      className="image-container"
+      style={{
+        left: `${left}px`,
+        top: `${top}px`,
+        position: "absolute",
+      }}
+    >
+      <ShineEffect ref={shineEffectRef} />
+    </div>
   );
-};
+}
 
 export default EnchantEffect;

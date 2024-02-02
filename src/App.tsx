@@ -12,11 +12,11 @@ function App() {
   const [type, setType] = useState("equip");
   const [showFlag, setShowFlag] = useState({ item: false, enchant: false });
   const [position, setPosition] = useState<positionType>({
-    item: { x: 200, y: 100 },
-    enchant: { x: 700, y: 100 },
+    item: { x: 100, y: 100 },
+    enchant: { x: 600, y: 100 },
   });
   const [move, setMove] = useState({ item: false, enchant: false });
-  const [dropItem, setDropItem] = useState<ItemInfo>();
+  const [dropItem, setDropItem] = useState<ItemInfo>();  
   
   function setItemType(itemType: string) {
     setType(itemType);

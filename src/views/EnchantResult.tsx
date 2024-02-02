@@ -1,6 +1,6 @@
 
 type Props = {
-    result: boolean;
+    result: string;
     isShow: (flag: boolean) => void;
 }
 
@@ -17,7 +17,7 @@ function EnchantResult({result, isShow} :Props) {
                 borderRadius: '10px'
               }}>               
             <div style={{color: 'white', fontSize: '14px', marginTop: '2em'}}>
-                <p>강화에 {result ? '성공' : '실패'} 하였습니다!</p>                    
+                <p>강화에 {result} 하였습니다!</p>                    
             </div>
             <div style={{backgroundColor: 'white', borderRadius: '0 0 10px 10px', marginTop: '3.5em', padding : '7px'}}>
                 <button style={{backgroundColor: 'lawngreen'}} onClick={() => isShow(false)}>확인</button>         

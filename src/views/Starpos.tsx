@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { ItemInfo } from "../common/option/CommonItem";
-import { starposPercentage } from "../common/option/CommonItem";
 
 type Props = {
   item?: ItemInfo;
-  setItem: (item: ItemInfo) => void;
   isShow: (flag: boolean) => void;
-  success: (flag: boolean) => void;
+  // setItem: (item: ItemInfo) => void;
+  // success: (flag: boolean) => void;
   
 };
 
-function Starpos({ item, isShow, success, setItem }: Props) {  
+function Starpos({ item, isShow }: Props) {  
   const [tarsnform, setTransform] = useState(0);
   const [direction, setDirection] = useState(1);
   const [count, setCount] = useState(0);    
@@ -23,19 +22,9 @@ function Starpos({ item, isShow, success, setItem }: Props) {
     }
   }
 
-  function stop() {           
-    const percent = starposPercentage[item?.equip?.starpos] * 0.1;
-    const randomValue = Math.random() * 10;
-    
-    if (randomValue <= percent) {
-      success(true);
-      item!.equip!.starpos += 1;
-    } else {
-      success(false);      
-    }          
+  function stop() {               
     stopInterval();
-    isShow(false);
-    setItem(item ?? {} as ItemInfo);
+    isShow(false);    
   }
 
   function keydownStop(event: KeyboardEvent) {         
@@ -67,7 +56,7 @@ function Starpos({ item, isShow, success, setItem }: Props) {
         window.removeEventListener("keydown", keydownStop);        
         stopInterval();
       }
-  }, [direction, count]); // direct
+  }, [direction]); 
 
   return (
     <div

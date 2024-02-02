@@ -162,3 +162,18 @@ td {
 .element.active {
   opacity: 1;
 }
+
+-----------------------
+
+
+.image-container {
+  position: relative;
+  overflow: hidden;
+  display: inline-block; /* 이미지를 감싸는 컨테이너를 inline-block으로 설정 */
+}
+
+.image-with-effect {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}

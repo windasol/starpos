@@ -1,10 +1,11 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { ItemInfo } from "../common/option/CommonItem";
 import Starpos from "./Starpos";
 import EnchantConfirm from "./EnchantConfirm";
 import EnchantResult from "./EnchantResult";
-import { starposPercentage } from "../common/option/CommonItem";
+import { successPercentage, failPercentage } from "../common/option/CommonItem";
 import EnchantEffect from "./EnchantEffect";
+import { nextTick } from "process";
 
 type Props = {
   showFlag: (flag: boolean) => void;
@@ -13,12 +14,13 @@ type Props = {
 };
 
 function ItemEnchant({ showFlag, moveFlag, item }: Props) {
+  
   const [starpos, setStarpos] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [resultPop, setResultPop] = useState(false);
-  const [effect, setEcffect] = useState(false);
-  const [effectClear, setEcffectClear] = useState(false);
-  const [result, setResult] = useState(false);    
+  const [effect, setEcffect] = useState(false);  
+  const [result, setResult] = useState('');    
+  const [starCatch, setStarCatch] = useState(false);  
   let flag = false;
 
   function enchant() {
@@ -52,29 +54,28 @@ function ItemEnchant({ showFlag, moveFlag, item }: Props) {
                 {item.equip?.starpos ?? 0} &gt; {(item.equip?.starpos ?? 0) + 1}
               </div>
               <div>
-                성공확률 : {starposPercentage[item.equip?.starpos ?? 0]}%
+                성공확률 : {successPercentage[item.equip?.starpos ?? 0]}%
               </div>
               <div>
                 실패({maintainOrDown()})확률 :{" "}
-                {100 - starposPercentage[item.equip?.starpos ?? 0]}%
-              </div>
-              {/* i */}
+                {failPercentage[item.equip?.starpos ?? 0]}%
+              </div>              
             </div>
           </div>
           스타캐치 해제
-          <input type="checkbox" />
+          <input type="checkbox" onChange={(e) => setStarCatch(e.target.checked)}/>
           파괴방지
           <input type="checkbox" />
           <div>필요한 메소 : 1010,210</div>
-          <button onClick={() => setConfirm(true)}>강화</button>
-          <button onClick={() => showFlag(false)}>취소</button>
+          <button onClick={() => setConfirm(true)} disabled={effect || resultPop}>강화</button>
+          <button onClick={() => showFlag(false)} disabled={effect || resultPop}>취소</button>
         </div>
       );
     }
   }
 
   function maintainOrDown() {
-    const starpos = starposPercentage[item?.equip?.starpos ?? 0];
+    const starpos = successPercentage[item?.equip?.starpos ?? 0];
     if (starpos < 15) {
       return "유지";
     } else {
@@ -85,21 +86,7 @@ function ItemEnchant({ showFlag, moveFlag, item }: Props) {
     }
   }
 
-  function upgradeEffect() {
-    const element = document.getElementById("enchantImg");
-    const top = element?.offsetTop ?? 0;
-    const left = element?.offsetLeft ?? 0;
-    if (effect) {
-      return (
-        <EnchantEffect
-          top={top}
-          left={left}
-          clear={(e) => setEcffectClear(e)}
-        />
-      );
-    }
-  }
-
+  // 강화 아이템 이미지
   function defaultImg() {
     if (flag) {
       return "";
@@ -110,47 +97,103 @@ function ItemEnchant({ showFlag, moveFlag, item }: Props) {
         <img src="/images/inner-starpos.png" draggable={false}></img>
       );
     }
+  }  
+
+   // 스타포스 확인 ,취소 팝업
+   function confirmPopup() {
+    if (confirm) {      
+      return <EnchantConfirm start={(e) => startCheck(e)} />;
+    }
   }
 
+  // 스타포스, 이펙트 활성화 , confirm 창 닫기
+  function startCheck(flag: boolean) {
+    if (starCatch) {
+      setEcffect(flag); 
+    } else {
+      setStarpos(flag);    
+    }
+    setConfirm(false);
+  }
+
+  // 스타포스 팝업
   function starposPopup() {
     if (starpos) {
       return (
         <Starpos
           item={item}
-          isShow={(e) => setStarpos(e)}
-          success={(e) => resultCheck(e)}
-          setItem={(e) => (item = e)}
+          isShow={(e) => starposResult(e)}          
         />
       );
     }
   }
 
-  function resultCheck(flag: boolean) {
-    setResult(flag);
-    setResultPop(true);
+  // 스타포스 후 결과
+  function starposResult(flag: boolean) {
+    setStarpos(flag);    
+    setEcffect(true);    
   }
 
-  function confirmPopup() {
-    if (confirm) {
-      return <EnchantConfirm start={(e) => startCheck(e)} />;
+  // 강화중 이펙트
+  function upgradeEffect() {
+    const element = document.getElementById("enchantImg");
+    const top = element?.offsetTop ?? 0;
+    const left = element?.offsetLeft ?? 0;
+    if (effect) {      
+      return (
+        <EnchantEffect
+          top={top}
+          left={left}
+          clear={() =>  nextTick(()=> {
+            setEcffect(false);
+            setResultPop(true);
+            percentCal();
+          })}
+        />        
+      );
     }
   }
 
-  function confirmResult() {
-    setResultPop(false);    
+  // 스타포스 확률 계산
+  function percentCal() {            
+    if (item?.equip?.starpos != undefined) {
+      const success = successPercentage[item.equip.starpos];
+      const fail = failPercentage[item.equip.starpos];      
+      const randomValue = Math.random() * 100;
+      const starpos = item.equip.starpos;
+      
+      // 파괴확률 없을때
+      if (fail == 0) {
+        if (randomValue < success) {          
+          item.equip.starpos += 1;          
+          setResult('성공');      
+        } else {
+          setResult('실패');      
+        }
+      } else {
+        if (randomValue < success) {
+            item.equip.starpos += 1;          
+            setResult('성공');      
+        } else if (randomValue < (success + fail)) {
+          if (starpos % 5 != 0) {
+            item.equip.starpos -= 1;          
+          }
+          setResult('실패');   
+        } else {
+          item.equip.starpos = -999;     
+          setResult('파괴');   
+        }
+      }
+      
+    }
   }
 
+  // 결과 팝업
   function resultPopup() {
-    if (resultPop) {
-      return <EnchantResult result={result} isShow={() => confirmResult()} />;
+    if (resultPop && !effect) {            
+      return <EnchantResult result={result} isShow={() => setResultPop(false)} />;
     }
-  }
-
-  function startCheck(flag: boolean) {
-    setStarpos(flag);
-    setConfirm(false);
-    // setEcffect(flag);
-  }
+  }  
 
   return (
     <div className="noneDrag">
@@ -177,7 +220,7 @@ function ItemEnchant({ showFlag, moveFlag, item }: Props) {
       </div>
       {starposPopup()}
       {confirmPopup()}
-      {resultPopup()}
+      {resultPopup()}      
     </div>
   );
 }

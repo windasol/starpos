@@ -64,7 +64,21 @@ export interface CashInfo {
     img: string;
 } 
                                   
-export const starposPercentage = [95,90,85,85,80,75,70,65,60,55,50,45,40,35,30,30,30,30,30,30,30,30,30,3,2];
+export const successPercentage = [95,90,85,85,80,75,70,65,60,55,50,45,40,35,30,30,30,30,30,30,30,30,30,3,2,1];
+export const failPercentage = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,67.9,67.9,67.2,67.2,0,63,77.6,68.6,59.4];
+export const destroyPercentage: {[key: number]: number}=  {
+    [15]: 2.1,
+    [16]: 2.1,
+    [17]: 2.1,
+    [18]: 2.8,
+    [19]: 2.8,
+    [20]: 7,
+    [21]: 7,
+    [22]: 19.4,
+    [23]: 39.6,
+};
+
+
 
 export const equipData :ItemInfo[] = [
     // 검
