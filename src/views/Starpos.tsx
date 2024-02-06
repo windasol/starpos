@@ -13,6 +13,7 @@ function Starpos({ item, isShow }: Props) {
   const [tarsnform, setTransform] = useState(0);
   const [direction, setDirection] = useState(1);
   const [count, setCount] = useState(0);    
+  const [time, setTime] = useState(6);
 
   const intervalIdRef = useRef<number | null>(null);  
 
@@ -35,6 +36,10 @@ function Starpos({ item, isShow }: Props) {
     }   
   }
   
+  function delay(ms: number) {
+    return new Promise(r => setTimeout(r,ms));
+  }
+
   useEffect(() => {        
     window.addEventListener("keydown", keydownStop);    
       intervalIdRef.current = window.setInterval(() => {
@@ -49,9 +54,15 @@ function Starpos({ item, isShow }: Props) {
         });
       }, 1);
 
-      if (count == 8) {
+      for (let i = 0; i < 5; i++)   {        
+        setTime(time - 1);
+        delay(1000);
+      }      
+
+      if (count == 5) {
         stop();
       }        
+
       return () => {
         window.removeEventListener("keydown", keydownStop);        
         stopInterval();
@@ -67,22 +78,36 @@ function Starpos({ item, isShow }: Props) {
         backgroundImage: 'url(/images/upgradeBackground.png)',
         marginLeft: '1.5em',
         marginTop: '2em',
-      }}>
-      <p style={{fontSize: '12px', color: 'white'}}>별을 정확한 곳에 멈추면 강화 성공률이 증가하며</p>
-      <p style={{fontSize: '12px', color: 'white'}}>연속해서 강화를 시도하면 난이도가 증가합니다.</p>
-      <div>
-        <img src={item?.equip?.img} style={{width: '100px', height: '100px'}}></img>
+      }}>            
+      <p style={{fontSize: '12px', color: 'white'}}>별을 정확한 곳에 멈추면 강화 성공률이 증가하며 <br/> 연속해서 강화를 시도하면 난이도가 증가합니다.</p>      
+      <div className="number">{time}</div>  
+      <div>     
+        <img src={item?.img} style={{width: '100px', height: '100px'}}></img>
       </div>
-      <div className="moving-box">
+
+      <div
+        style={{
+          transform: `translateX(${tarsnform}px)`,     
+          width: '50px',            
+        }}
+      >          
+        <img src="/images/star.png" style={{width: '35px'}}></img>                  
+      </div>  
+      <div className="container">
+        <div className="content" >                  
+        </div>
+      </div>
+
+      {/* <div className="moving-box" style={{borderRadius: '10px'}}>        
         <div
           style={{
             transform: `translateX(${tarsnform}px)`,     
-            width: '50px',
+            width: '50px',            
           }}
-        >
+        >          
           <img src="/images/star.png" style={{width: '35px'}}></img>                  
         </div>
-      </div>
+      </div> */}
       <button onClick={() => stop()}>stop</button>
     </div>
   );

@@ -8,3 +8,7 @@ export interface positionType {
     enchant: coordinate;
 }
   
+export interface showType {
+    item: boolean;
+    enchant: boolean;
+}
