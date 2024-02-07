@@ -131,9 +131,6 @@ td {
 
 /* 내부 정사각형 스타일 */
 .inner-square {
-  /* width: 140px; 
-  height: 140px; */
-  /* background-color: #3498db; */
   position: absolute;
   top: 50%;
   left: 50%;
@@ -193,6 +190,17 @@ td {
   font-weight: bold;
 }
 
+.percentUp {
+  color: yellow;
+  font-size: 30px;
+  position: absolute;
+  align-items: center;  
+  margin-bottom: 3em;
+  margin-left: 1.7em;
+  z-index: 9999;
+  font-weight: bold;
+}
+
 .container {  
   display: flex; /* 요소들을 가로로 배열 */
   justify-content: center; /* 가로 가운데 정렬 */
@@ -204,7 +212,9 @@ td {
 
 .content {
   position: absolute;
-  width: 60px;
+  width: 70px;
   height: 35px;  
-  background-color: skyblue;
+  background-color: #B86824;
+  border-left: 2px solid rgba(255, 153, 0, 0.856);
+  border-right: 2px solid rgba(255, 153, 0, 0.856);
 }

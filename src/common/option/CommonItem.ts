@@ -21,6 +21,7 @@ export interface EquipInfo {
     potential?: [];
     additional?: [];
     job: string;
+    equipType: string;
     stats?: EquipStats;
     img: string;
 }
@@ -94,6 +95,7 @@ export const equipData :ItemInfo[] = [
         starpos: 0,
         maxStarpos: 5,
         job: 'all',
+        equipType: 'weapon',
         img: '/images/sword.png',        
     },
     // 카루타 
@@ -105,6 +107,7 @@ export const equipData :ItemInfo[] = [
         starpos: 0,
         maxStarpos: 25,
         job: 'warrior',
+        equipType: 'top',
         img: '/images/lutavis-thief-top.png',        
     },
     {

@@ -13,16 +13,16 @@ type Props = {
   item?: EquipInfo;
 };
 
-function ItemEnchant({ closeBtn, moveFlag, item }: Props) {
+function EquipmentEnchant({ closeBtn, moveFlag, item }: Props) {
   const [starpos, setStarpos] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [resultPop, setResultPop] = useState(false);
   const [effect, setEcffect] = useState(false);
   const [result, setResult] = useState("");
-  const [starCatch, setStarCatch] = useState(false);
-  // const [emptyItem, setEmptyItem] = useState(false);
-
+  const [starCatch, setStarCatch] = useState(false);  
+  const [destroyDefend, setDestroyDefend] = useState(false);
   const emptyItem = useRef(false);  
+  const percentUp = useRef(false);
 
   function enchant() {
     if (item) {      
@@ -70,7 +70,9 @@ function ItemEnchant({ closeBtn, moveFlag, item }: Props) {
             onChange={(e) => setStarCatch(e.target.checked)}
           />
           파괴방지
-          <input type="checkbox" />
+          <input type="checkbox" 
+          onChange={(e) => setDestroyDefend(e.target.checked)}
+          disabled={item.starpos < 15 }/>
           <div>필요한 메소 : 1010,210</div>
           <button
             onClick={() => setConfirm(true)}
@@ -117,6 +119,7 @@ function ItemEnchant({ closeBtn, moveFlag, item }: Props) {
   // 스타포스, 이펙트 활성화 , confirm 창 닫기
   function startCheck(flag: boolean) {
     if (starCatch) {
+      percentUp.current = false;
       setEcffect(flag);
     } else {
       setStarpos(flag);
@@ -125,8 +128,9 @@ function ItemEnchant({ closeBtn, moveFlag, item }: Props) {
   }
 
   // 스타포스 후 결과
-  function starposResult(flag: boolean) {
-    setStarpos(flag);
+  function starposResult(flag: boolean) {        
+    percentUp.current = flag;
+    setStarpos(false);
     setEcffect(true);
   }
 
@@ -155,10 +159,19 @@ function ItemEnchant({ closeBtn, moveFlag, item }: Props) {
   // 스타포스 확률 계산
   function percentCal() {    
     if (item?.starpos != undefined) {
-      const success = successPercentage[item.starpos];
-      const fail = failPercentage[item.starpos];
+      
+      let success = successPercentage[item.starpos];
+      let fail = failPercentage[item.starpos];
       const randomValue = Math.random() * 100;
       const starpos = item.starpos;
+
+      if (percentUp.current) {
+        success = Number((success * 0.05).toFixed(2)) + success;
+        fail = fail - Number((fail * 0.05).toFixed(2));
+      }
+
+      console.log('success : ' + success);
+      console.log('fail : ' + fail)
 
       // 파괴확률 없을때
       if (fail == 0) {
@@ -178,8 +191,12 @@ function ItemEnchant({ closeBtn, moveFlag, item }: Props) {
           }
           setResult("실패");
         } else {
-          item.starpos = -999;
-          setResult("파괴");
+          if (destroyDefend) {
+            setResult("실패");  
+          } else {
+            item.starpos = -999;
+            setResult("파괴");
+          }
         }
       }
     }
@@ -208,11 +225,11 @@ function ItemEnchant({ closeBtn, moveFlag, item }: Props) {
         <div>{defaultImg()}</div>
         {enchant()}
       </div>
-      {starpos && <Starpos item={item} isShow={(e) => starposResult(e)} />}
+      {starpos && <Starpos item={item} isResult={(e) => starposResult(e)}/>}
       {confirm && <EnchantConfirm start={(e) => startCheck(e)} />}
       {(resultPop && !effect) && <EnchantResult result={result} isShow={() => setResultPop(false)} />}
     </div>
   );
 }
 
-export default ItemEnchant;
+export default EquipmentEnchant;

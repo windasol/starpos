@@ -3,7 +3,7 @@ import { positionType, showType } from "../common/option/typeOption";
 import { EquipInfo, itemType } from "../common/option/CommonItem";
 import Dragable from "../common/component/Dragable";
 import ItemInventory from "./ItemInventory";
-import ItemEnchant from "./ItemEnchant";
+import EquipmentEnchant from "./EquipmentEnchant";
 
 function EnchantMangement() {
   const itemTable = { row: 10, col: 4 };
@@ -32,8 +32,8 @@ function EnchantMangement() {
     };
   });
 
-  return (
-    <>
+  return (    
+    <div style={{backgroundImage: 'url(/images/henesis.jpg)', width: '100%'}}>
       {showFlag.item && (
         <Dragable
           flag={move.item}
@@ -61,7 +61,7 @@ function EnchantMangement() {
         <Dragable
           flag={move.enchant}
           htmlContent={
-            <ItemEnchant
+            <EquipmentEnchant
               item={dropItem}
               closeBtn={(flag) => {
                 setShowFlag({ ...showFlag, enchant: flag });
@@ -75,7 +75,7 @@ function EnchantMangement() {
           }}
         />
       )}
-    </>
+    </div>    
   );
 }
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {type ItemInfo, equipData, itemType, SpendInfo, EquipInfo, EtcInfo, CashInfo} from '../common/option/CommonItem';
-import { jobType } from '../common/option/JobOption';
+import { jobBind, job } from '../common/option/JobOption';
 import { positionType, showType } from '../common/option/typeOption';
 
 type Props = {
@@ -83,16 +83,48 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
     }    
   }
 
+  function showStar(info: EquipInfo) {
+    const star = [];
+    for(let i = 1; i <= info.maxStarpos; i++) {
+      if ( i == 16) star.push(<br/>);      
+      i > info.starpos ? star.push(<img src='/images/noneStar.png' style={{width: '13px', height: '13px'}} />) 
+      : star.push(<img src='/images/star.png' style={{width: '13px', height: '13px'}}/>);      
+      if (i % 5 == 0) star.push(<span> </span>);      
+    }
+
+    return star;
+  }
+
   function showEquip(info: EquipInfo) {    
     return (
-      <div className='itemInfo'>
-        <p>스타포스 : {info?.starpos}</p>
-        <p>{info.name}</p>
-        <p>REQ LEV : {info.level}</p>        
-        <img className="showItemIng" src={info.img}></img>
-        <p>직업 : {jobType[info.job ?? '']}</p>
+      <div className='itemInfo' style={{backgroundColor: 'black', color: 'white', borderRadius: '10px'}}>
+        {showStar(info)}
+        <div style={{fontWeight: 'bold'}}>{info.name}</div>        
+        <div style={{display: 'flex'}}>
+          <div style={{width: '50%'}}>
+            <img className="showItemIng" src={info.img}></img>
+          </div>
+          <div>
+            <div style={{fontSize: '10px'}}>REQ LEV : {info.level}</div>      
+          </div>
+        </div>  
+        <div style={{fontSize: '14px'}}>
+          {job.map((job) => equipJobAble(job, jobBind[info.job]))}          
+        </div>    
+        <div style={{border: '1px solid #464646', width: '100%', borderStyle: 'dotted'}}></div>
+        <div style={{fontSize: '14px'}}>장비분류 : {info.equipType}</div>
     </div>
     )
+  }
+
+  function equipJobAble(job: string, jobCheck: string) {        
+    let colors = job == jobCheck ? 'white' : 'gray';
+    if (jobCheck == 'all') colors = 'white';    
+    return (
+      <>
+        <span style={{ color: colors}}>{job} </span>         
+      </>
+    );
   }
 
   function showSpend(info: SpendInfo) {

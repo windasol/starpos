@@ -1,20 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { ItemInfo } from "../common/option/CommonItem";
+import EnchantEffect from "./EnchantEffect";
 
 type Props = {
   item?: ItemInfo;
-  isShow: (flag: boolean) => void;
-  // setItem: (item: ItemInfo) => void;
-  // success: (flag: boolean) => void;
-  
+  isResult: (flag: boolean) => void;  
 };
 
-function Starpos({ item, isShow }: Props) {  
+function Starpos({ item, isResult }: Props) {  
   const [tarsnform, setTransform] = useState(0);
   const [direction, setDirection] = useState(1);
   const [count, setCount] = useState(0);    
-  const [time, setTime] = useState(6);
-
+  const [timeLimit, setTimeLimit] = useState(6);
+  const [isCatch, isSetCatch] = useState(false);
+  const [percentUp, setPercentUp] = useState(false);
+  const position = useRef(0);
+  
   const intervalIdRef = useRef<number | null>(null);  
 
   function stopInterval() {
@@ -23,9 +24,13 @@ function Starpos({ item, isShow }: Props) {
     }
   }
 
-  function stop() {               
+  function stop() {       
+    const x = position.current; 
+    if (x >= 106 &&  x<= 150) {
+      setPercentUp(true);
+    }    
     stopInterval();
-    isShow(false);    
+    isSetCatch(true);    
   }
 
   function keydownStop(event: KeyboardEvent) {         
@@ -40,8 +45,12 @@ function Starpos({ item, isShow }: Props) {
     return new Promise(r => setTimeout(r,ms));
   }
 
-  useEffect(() => {        
-    window.addEventListener("keydown", keydownStop);    
+  function starposClose() {
+    isResult(percentUp);    
+  }
+
+  useEffect(() => {            
+    window.addEventListener("keydown", keydownStop);        
       intervalIdRef.current = window.setInterval(() => {
         setTransform((prevPosition) => {
           if (prevPosition == 250) {
@@ -50,12 +59,13 @@ function Starpos({ item, isShow }: Props) {
             setDirection(1);
             setCount(count + 1);
           }
+          position.current =  prevPosition + direction;
           return prevPosition + direction;
         });
       }, 1);
-
+      
       for (let i = 0; i < 5; i++)   {        
-        setTime(time - 1);
+        setTimeLimit(timeLimit - 1);
         delay(1000);
       }      
 
@@ -80,34 +90,27 @@ function Starpos({ item, isShow }: Props) {
         marginTop: '2em',
       }}>            
       <p style={{fontSize: '12px', color: 'white'}}>별을 정확한 곳에 멈추면 강화 성공률이 증가하며 <br/> 연속해서 강화를 시도하면 난이도가 증가합니다.</p>      
-      <div className="number">{time}</div>  
+      <div className="number">{!isCatch && timeLimit}</div>  
+      <div className="percentUp">{percentUp && <p>+ 강화 성공률</p> }</div>  
       <div>     
         <img src={item?.img} style={{width: '100px', height: '100px'}}></img>
       </div>
-
+      
       <div
-        style={{
-          transform: `translateX(${tarsnform}px)`,     
-          width: '50px',            
-        }}
-      >          
-        <img src="/images/star.png" style={{width: '35px'}}></img>                  
+          style={{
+            transform: `translateX(${tarsnform}px)`,     
+            position: 'absolute',
+            width: '50px',       
+            zIndex: '999',
+          }}
+        >          
+          <img src="/images/starcatch.png" style={{width: '35px'}}></img>      
+          {isCatch && <EnchantEffect top={-30} left={-20} clear={() => starposClose()}></EnchantEffect>}
       </div>  
       <div className="container">
         <div className="content" >                  
         </div>
-      </div>
-
-      {/* <div className="moving-box" style={{borderRadius: '10px'}}>        
-        <div
-          style={{
-            transform: `translateX(${tarsnform}px)`,     
-            width: '50px',            
-          }}
-        >          
-          <img src="/images/star.png" style={{width: '35px'}}></img>                  
-        </div>
-      </div> */}
+      </div>      
       <button onClick={() => stop()}>stop</button>
     </div>
   );
