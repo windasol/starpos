@@ -86,19 +86,18 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
   function showStar(info: EquipInfo) {
     const star = [];
     for(let i = 1; i <= info.maxStarpos; i++) {
-      if ( i == 16) star.push(<br/>);      
-      i > info.starpos ? star.push(<img src='/images/noneStar.png' style={{width: '13px', height: '13px'}} />) 
-      : star.push(<img src='/images/star.png' style={{width: '13px', height: '13px'}}/>);      
-      if (i % 5 == 0) star.push(<span> </span>);      
-    }
-
+      if ( i == 16) star.push(<br key={i + 500}/>);      
+      i > info.starpos ? star.push(<img src='/images/noneStar.png' style={{width: '13px', height: '13px'}} key={i} />) 
+      : star.push(<img src='/images/star.png' style={{width: '13px', height: '13px' }} key={i} />);      
+      if (i % 5 == 0) star.push(<span key={i + 100}> </span>);      
+    }    
     return star;
   }
 
   function showEquip(info: EquipInfo) {    
     return (
-      <div className='itemInfo' style={{backgroundColor: 'black', color: 'white', borderRadius: '10px'}}>
-        {showStar(info)}
+      <div className='itemInfo' style={{backgroundColor: 'black', color: 'white', borderRadius: '10px'}}>        
+        {showStar(info)}        
         <div style={{fontWeight: 'bold'}}>{info.name}</div>        
         <div style={{display: 'flex'}}>
           <div style={{width: '50%'}}>
@@ -120,10 +119,8 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
   function equipJobAble(job: string, jobCheck: string) {        
     let colors = job == jobCheck ? 'white' : 'gray';
     if (jobCheck == 'all') colors = 'white';    
-    return (
-      <>
-        <span style={{ color: colors}}>{job} </span>         
-      </>
+    return (      
+      <span key={job} style={{ color: colors}}>{job} </span>               
     );
   }
 
