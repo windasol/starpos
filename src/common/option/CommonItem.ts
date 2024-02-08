@@ -32,6 +32,9 @@ export interface EquipStats {
     int?: number;
     luck?: number;
     power?: number;
+    maxHp?: number;
+    maxMp?: number;
+    allStat?: number;
     magicPower?: number;
     bossPower?: number;
     guardIgnore?: number;
@@ -72,7 +75,7 @@ export interface CashInfo {
 } 
                     
 export const successPercentage = [95,90,85,85,80,75,70,65,60,55,50,45,40,35,30,30,30,30,30,30,30,30,30,3,2,1];
-export const failPercentage = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,67.9,67.9,67.2,67.2,0,63,77.6,68.6,59.4];
+export const failPercentage = [5,10,15,15,20,25,30,35,40,45,50,55,60,65,70,67.9,67.9,67.2,67.2,0,63,77.6,68.6,59.4];
 export const destroyPercentage: {[key: number]: number}=  {
     [15]: 2.1,
     [16]: 2.1,
@@ -84,6 +87,9 @@ export const destroyPercentage: {[key: number]: number}=  {
     [22]: 19.4,
     [23]: 39.6,
 };
+export const statIncrease = [2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,7,7,7,7,7,7,7]
+
+// 방어구 공 130 : 7로 시작 +10 마다 1씩증가 , 21성에서 2씩증가
 
 export const equipData :ItemInfo[] = [
     // 검
@@ -96,7 +102,15 @@ export const equipData :ItemInfo[] = [
         maxStarpos: 5,
         job: 'all',
         equipType: 'weapon',
-        img: '/images/sword.png',        
+        stats: {
+            str: 3,
+            dex: 3,
+            int: 3,
+            luck: 3,
+            power: 15,                                    
+        },
+        img: '/images/sword.png',     
+        upgradeCount: 5,   
     },
     // 카루타 
     {
@@ -109,6 +123,7 @@ export const equipData :ItemInfo[] = [
         job: 'warrior',
         equipType: 'top',
         img: '/images/lutavis-thief-top.png',        
+        upgradeCount: 7,
     },
     {
         type: 'spend',

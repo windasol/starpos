@@ -1,9 +1,8 @@
 import { useRef, useState } from "react";
-import { EquipInfo } from "../common/option/CommonItem";
+import { EquipInfo, destroyPercentage, statIncrease, successPercentage, failPercentage } from "../common/option/CommonItem";
 import Starpos from "./Starpos";
 import EnchantConfirm from "./EnchantConfirm";
 import EnchantResult from "./EnchantResult";
-import { successPercentage, failPercentage } from "../common/option/CommonItem";
 import EnchantEffect from "./EnchantEffect";
 import { nextTick } from "process";
 
@@ -42,7 +41,7 @@ function EquipmentEnchant({ closeBtn, moveFlag, item }: Props) {
           <button>스타포스 강화</button>
           <button>장비전승</button>
           <div>메소를 사용하여 장비를 강화합니다.</div>
-          <div style={{ display: "flex" }}>
+          <div style={{ display: "flex"}}>
             <div style={{ width: "50%" }}>
               <img
                 style={{ width: "100px", height: "100px" }}
@@ -51,9 +50,9 @@ function EquipmentEnchant({ closeBtn, moveFlag, item }: Props) {
               ></img>
               {upgradeEffect()}
             </div>
-            <div style={{ width: "50%" }}>
+            <div style={{ width: "50%" , overflow: 'auto', height: '100px'}}>
               <div>
-                {item.starpos ?? 0} &gt; {(item.starpos ?? 0) + 1}
+                {item.starpos ?? 0}성 &gt; {(item.starpos ?? 0) + 1}성
               </div>
               <div>
                 성공확률 : {successPercentage[item.starpos ?? 0]}%
@@ -61,6 +60,15 @@ function EquipmentEnchant({ closeBtn, moveFlag, item }: Props) {
               <div>
                 실패({maintainOrDown()})확률 :{" "}
                 {failPercentage[item.starpos ?? 0]}%
+              </div>
+              <div>                
+                {item.starpos >= 15 ? `파괴확률 : ${destroyPercentage[item.starpos ?? 0]} %`  : ''}
+              </div>
+              <div>
+                <div>STR : +{statIncrease[item.starpos]}</div>
+                <div>DEX : +{statIncrease[item.starpos]}</div>
+                <div>LUCK : +{statIncrease[item.starpos]}</div>
+                <div>INT : +{statIncrease[item.starpos]}</div>
               </div>
             </div>
           </div>
@@ -174,7 +182,7 @@ function EquipmentEnchant({ closeBtn, moveFlag, item }: Props) {
       console.log('fail : ' + fail)
 
       // 파괴확률 없을때
-      if (fail == 0) {
+      if (item.starpos < 15) {
         if (randomValue < success) {
           item.starpos += 1;
           setResult("성공");

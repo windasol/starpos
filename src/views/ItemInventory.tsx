@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {type ItemInfo, equipData, itemType, SpendInfo, EquipInfo, EtcInfo, CashInfo} from '../common/option/CommonItem';
+import {type ItemInfo, equipData, itemType, SpendInfo, EquipInfo, EtcInfo, CashInfo, type EquipStats, statIncrease} from '../common/option/CommonItem';
 import { jobBind, job } from '../common/option/JobOption';
 import { positionType, showType } from '../common/option/typeOption';
 
@@ -94,7 +94,7 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
     return star;
   }
 
-  function showEquip(info: EquipInfo) {    
+  function showEquip(info: EquipInfo) {        
     return (
       <div className='itemInfo' style={{backgroundColor: 'black', color: 'white', borderRadius: '10px'}}>        
         {showStar(info)}        
@@ -111,9 +111,45 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
           {job.map((job) => equipJobAble(job, jobBind[info.job]))}          
         </div>    
         <div style={{border: '1px solid #464646', width: '100%', borderStyle: 'dotted'}}></div>
-        <div style={{fontSize: '14px'}}>장비분류 : {info.equipType}</div>
+        <div style={{fontSize: '14px', marginRight: '7.5em'}}>장비분류 : {info.equipType}</div>
+        {showEquipStat(info)}
+        <div style={{fontSize: '14px', marginRight: '7em'}}>업그레이드 가능 횟수 : {info.upgradeCount}</div>
     </div>
     )
+  }
+
+  // function showEquipStat(info: EquipInfo) {
+  //   if (info.stats) {
+  //     const html = [];                                    
+  //     type statType = 'str' | 'dex' | 'luck' | 'int';
+  //     const validStatTypes: statType[] = ['str', 'dex', 'luck', 'int'];
+  //     let score = 0;
+  //     for (let i = 0; i < info.starpos; i++) {
+  //       score += statIncrease[i];
+  //     }
+
+  //     for (const key in info.stats) {   
+  //       if (validStatTypes.includes(key as statType)) {          
+  //         const baseStat = info.stats[key as statType] ?? 0;
+  //         html.push(<div key={key} style={{fontSize: '14px', marginRight: '12em'}}>{`${key} : ${(baseStat+ score)}(${baseStat} + ${score})`}</div>)
+  //       }
+  //     }   
+  //     return html;
+  //   }
+  // }
+
+  function showEquipStat(info: EquipInfo) {
+    if (!info.stats) return []; // stats가 없으면 빈 배열 반환
+  
+    const score = statIncrease.slice(0, info.starpos).reduce((acc, val) => acc + val, 0);
+  
+    return Object.entries(info.stats)
+      .filter(([key]) => ['str', 'dex', 'luck', 'int'].includes(key))
+      .map(([key, baseStat]) => (
+        <div key={key} style={{ fontSize: '14px', marginRight: '12em' }}>
+          {`${key} : ${(baseStat + score)}(${baseStat} + ${score})`}
+        </div>
+      ));
   }
 
   function equipJobAble(job: string, jobCheck: string) {        
