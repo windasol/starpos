@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import {type ItemInfo, equipData, itemType, SpendInfo, EquipInfo, EtcInfo, CashInfo, type EquipStats, statIncrease} from '../common/option/CommonItem';
-import { jobBind, job } from '../common/option/JobOption';
+import {type ItemInfo, equipData, itemType, SpendInfo, EquipInfo, EtcInfo, CashInfo, statIncrease, powerIncrease, statType} from '../common/option/CommonItem';
 import { positionType, showType } from '../common/option/typeOption';
+import PopEquipInfo from './PopEquipInfo';
 
 type Props = {
   row: number;
@@ -73,7 +73,7 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
   function showType(info:ItemInfo) {     
     switch(itemType) {
       case 'equip': 
-        return showEquip(info as EquipInfo);        
+        return (<PopEquipInfo equipInfo={info as EquipInfo}/>)       
       case 'spend':
         return showSpend(info as SpendInfo);        
       case 'etc':
@@ -81,83 +81,6 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
       case 'cash':
         return showCash(info as CashInfo);
     }    
-  }
-
-  function showStar(info: EquipInfo) {
-    const star = [];
-    for(let i = 1; i <= info.maxStarpos; i++) {
-      if ( i == 16) star.push(<br key={i + 500}/>);      
-      i > info.starpos ? star.push(<img src='/images/noneStar.png' style={{width: '13px', height: '13px'}} key={i} />) 
-      : star.push(<img src='/images/star.png' style={{width: '13px', height: '13px' }} key={i} />);      
-      if (i % 5 == 0) star.push(<span key={i + 100}> </span>);      
-    }    
-    return star;
-  }
-
-  function showEquip(info: EquipInfo) {        
-    return (
-      <div className='itemInfo' style={{backgroundColor: 'black', color: 'white', borderRadius: '10px'}}>        
-        {showStar(info)}        
-        <div style={{fontWeight: 'bold'}}>{info.name}</div>        
-        <div style={{display: 'flex'}}>
-          <div style={{width: '50%'}}>
-            <img className="showItemIng" src={info.img}></img>
-          </div>
-          <div>
-            <div style={{fontSize: '10px'}}>REQ LEV : {info.level}</div>      
-          </div>
-        </div>  
-        <div style={{fontSize: '14px'}}>
-          {job.map((job) => equipJobAble(job, jobBind[info.job]))}          
-        </div>    
-        <div style={{border: '1px solid #464646', width: '100%', borderStyle: 'dotted'}}></div>
-        <div style={{fontSize: '14px', marginRight: '7.5em'}}>장비분류 : {info.equipType}</div>
-        {showEquipStat(info)}
-        <div style={{fontSize: '14px', marginRight: '7em'}}>업그레이드 가능 횟수 : {info.upgradeCount}</div>
-    </div>
-    )
-  }
-
-  // function showEquipStat(info: EquipInfo) {
-  //   if (info.stats) {
-  //     const html = [];                                    
-  //     type statType = 'str' | 'dex' | 'luck' | 'int';
-  //     const validStatTypes: statType[] = ['str', 'dex', 'luck', 'int'];
-  //     let score = 0;
-  //     for (let i = 0; i < info.starpos; i++) {
-  //       score += statIncrease[i];
-  //     }
-
-  //     for (const key in info.stats) {   
-  //       if (validStatTypes.includes(key as statType)) {          
-  //         const baseStat = info.stats[key as statType] ?? 0;
-  //         html.push(<div key={key} style={{fontSize: '14px', marginRight: '12em'}}>{`${key} : ${(baseStat+ score)}(${baseStat} + ${score})`}</div>)
-  //       }
-  //     }   
-  //     return html;
-  //   }
-  // }
-
-  function showEquipStat(info: EquipInfo) {
-    if (!info.stats) return []; // stats가 없으면 빈 배열 반환
-  
-    const score = statIncrease.slice(0, info.starpos).reduce((acc, val) => acc + val, 0);
-  
-    return Object.entries(info.stats)
-      .filter(([key]) => ['str', 'dex', 'luck', 'int'].includes(key))
-      .map(([key, baseStat]) => (
-        <div key={key} style={{ fontSize: '14px', marginRight: '12em' }}>
-          {`${key} : ${(baseStat + score)}(${baseStat} + ${score})`}
-        </div>
-      ));
-  }
-
-  function equipJobAble(job: string, jobCheck: string) {        
-    let colors = job == jobCheck ? 'white' : 'gray';
-    if (jobCheck == 'all') colors = 'white';    
-    return (      
-      <span key={job} style={{ color: colors}}>{job} </span>               
-    );
   }
 
   function showSpend(info: SpendInfo) {

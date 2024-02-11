@@ -30,7 +30,7 @@ export interface EquipStats {
     str?: number;
     dex?: number;
     int?: number;
-    luck?: number;
+    luk?: number;
     power?: number;
     maxHp?: number;
     maxMp?: number;
@@ -66,13 +66,15 @@ export interface CashInfo {
     str?: number;
     dex?: number;
     int?: number;
-    luck?: number;
+    luk?: number;
     power?: number;
     magicPower?: number;
     bossPower?: number;
     guardIgnore?: number; 
     img: string;
 } 
+
+export const statType = ['str', 'dex', 'luk', 'int'];
                     
 export const successPercentage = [95,90,85,85,80,75,70,65,60,55,50,45,40,35,30,30,30,30,30,30,30,30,30,3,2,1];
 export const failPercentage = [5,10,15,15,20,25,30,35,40,45,50,55,60,65,70,67.9,67.9,67.2,67.2,0,63,77.6,68.6,59.4];
@@ -87,7 +89,24 @@ export const destroyPercentage: {[key: number]: number}=  {
     [22]: 19.4,
     [23]: 39.6,
 };
-export const statIncrease = [2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,7,7,7,7,7,7,7]
+// export const statIncrease = [2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,11,11,11,11,11,11,11];
+
+export const statIncrease ={
+    130: [2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,7,7,7,7,7,7,7,0,0,0],
+    140: [2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,9,9,9,9,9,9,9,0,0,0],
+    150: [2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,11,11,11,11,11,11,11,0,0,0],
+    160: [2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,13,13,13,13,13,13,13,0,0,0],
+    200: [2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,15,15,15,15,15,15,15,0,0,0],
+}
+
+export const powerIncrease ={
+    130: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,8,9,10,11],
+    140: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,10,11,12,13,15,17,19,21],
+    150: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,10,11,12,13,14,16,18,20,22],
+    160: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,11,12,13,14,15,17,19,21,23],
+    200: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,13,14,15,16,17,19,21,23,25],
+}
+
 
 // 방어구 공 130 : 7로 시작 +10 마다 1씩증가 , 21성에서 2씩증가
 
@@ -106,7 +125,7 @@ export const equipData :ItemInfo[] = [
             str: 3,
             dex: 3,
             int: 3,
-            luck: 3,
+            // luk: 3,
             power: 15,                                    
         },
         img: '/images/sword.png',     
