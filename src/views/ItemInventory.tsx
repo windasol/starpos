@@ -66,7 +66,7 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
       const startY = position.enchant.y + 30;
   
       const check = x >= startX && x <= endX && y >= startY && y <= endY;
-      if (check) dropItem(item);                  
+      if (check && item.type == 'equip') dropItem(item);                  
     }
   }
   

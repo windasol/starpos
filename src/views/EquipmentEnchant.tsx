@@ -15,6 +15,7 @@ type Props = {
 
 function EquipmentEnchant({ closeBtn, moveFlag, item }: Props) {
   const [starpos, setStarpos] = useState(false);
+  const [btnType, setBtnType] = useState('b')
   const [confirm, setConfirm] = useState(false);
   const [resultPop, setResultPop] = useState(false);
   const [effect, setEcffect] = useState(false);
@@ -39,9 +40,9 @@ function EquipmentEnchant({ closeBtn, moveFlag, item }: Props) {
             color: "white",
           }}
         >
-          <button>주문서</button>
-          <button>스타포스 강화</button>
-          <button>장비전승</button>
+          <button className="enchantBtn" style={typeStyle('a')} onClick={() => setBtnType('a')}>주문서</button>
+          <button className="enchantBtn" style={typeStyle('b')} onClick={() => setBtnType('b')}>스타포스 강화</button>
+          <button className="enchantBtn" style={typeStyle('c')} onClick={() => setBtnType('c')}>장비전승</button>
           <div>메소를 사용하여 장비를 강화합니다.</div>
           <div style={{ display: "flex"}}>
             <div style={{ width: "50%" }}>
@@ -101,6 +102,9 @@ function EquipmentEnchant({ closeBtn, moveFlag, item }: Props) {
     } 
   }
 
+  function typeStyle(type: string) {    
+    return btnType == type ? {backgroundColor: 'green'} : {};    
+  }
 
   function starposStat() {
     if (item) {

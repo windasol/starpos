@@ -218,3 +218,11 @@ td {
   border-left: 2px solid rgba(255, 153, 0, 0.856);
   border-right: 2px solid rgba(255, 153, 0, 0.856);
 }
+
+
+.enchantBtn {
+  /* background-image: url(/images/inner-starpos2.png); */
+  background-color: #8B6331;
+  color: white;
+  border: 1px solid black;
+}
