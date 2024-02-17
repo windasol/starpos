@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {type ItemInfo, equipData, itemType, SpendInfo, EquipInfo, EtcInfo, CashInfo, statIncrease, powerIncrease, statType} from '../common/option/CommonItem';
 import { positionType, showType } from '../common/option/typeOption';
-import PopEquipInfo from './PopEquipInfo';
+import PopEquipInfo from './starpos/PopEquipInfo';
 
 type Props = {
   row: number;

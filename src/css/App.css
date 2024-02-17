@@ -5,6 +5,15 @@
   text-align: center;
 }
 
+body {
+  background-image: url(/images/henesis.jpg);
+  background-size: cover; 
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -44,6 +53,7 @@
 .bigTable {
   border: solid black; ;
   border-radius: 10px;
+  background-color: white;
 }
 
 .itemTable {
@@ -95,13 +105,13 @@ td {
   position: absolute;
   justify-content: center;
   align-items: center;  
-  /* width: 400px; */
   height: 314px;
   top: 50%;
   left: 50%;
   border: solid black;
   background-color: white;
   border-radius: 10px;  
+  background-image: url(/images/inner-starpos2.png);
 }
 
 .inner-box {  
@@ -225,4 +235,17 @@ td {
   background-color: #8B6331;
   color: white;
   border: 1px solid black;
+}
+
+.henesis {
+  background-image: 'url(/images/henesis.png)';
+}
+
+.equipEnchant {
+  width: 343px;
+  height: 283.5px;
+  background-image: url(/images/inner-starpos2.png);
+  border-radius: 10px;
+  z-Index: 999;
+  color: white;
 }

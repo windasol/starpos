@@ -1,10 +1,10 @@
 import "./css/App.css"
 import "./css/pop.scss"
-import EnchantMangement from "./views/EnchantMangement";
+import StarposMangement from "./views/StarposMangement";
 
 function App() {
   return (
-    <EnchantMangement/>
+    <StarposMangement />
   )
 }
 
