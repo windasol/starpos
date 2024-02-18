@@ -121,7 +121,8 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
       <div className='itemTop' onMouseDown={() => moveFlag(true)} onMouseUp={() => moveFlag(false)}>
         <div style={{width: '80%', marginLeft: '3em'}} draggable="false">Item Inventory</div>
         <div style={{width: '20%', cursor: 'pointer'}} onClick={() => {closeBtn(false)}}>x</div>
-      </div>      
+      </div>     
+       
         <button className="itemButton" style={typeStyle('equip')} onClick={() => setItemType('equip')}>장비</button>
         <button className="itemButton" style={typeStyle('spend')} onClick={() => setItemType('spend')}>소비</button>
         <button className="itemButton" style={typeStyle('etc')} onClick={() => setItemType('etc')}>기타</button>
