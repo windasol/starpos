@@ -14,6 +14,7 @@ export interface EquipInfo {
     name: string;
     level: number;
     starpos: number;
+    starposFinish: boolean;
     maxStarpos: number;
     changeCount?: number;
     upgradeCount?: number;
