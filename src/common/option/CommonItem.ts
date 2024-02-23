@@ -109,6 +109,7 @@ export const powerIncrease ={
 }
 
 
+
 // 방어구 공 130 : 7로 시작 +10 마다 1씩증가 , 21성에서 2씩증가
 
 export const equipData :ItemInfo[] = [
@@ -122,6 +123,7 @@ export const equipData :ItemInfo[] = [
         maxStarpos: 5,
         job: 'all',
         equipType: 'weapon',
+        starposFinish: false,
         stats: {
             str: 3,
             dex: 3,
@@ -142,6 +144,7 @@ export const equipData :ItemInfo[] = [
         maxStarpos: 25,
         job: 'warrior',
         equipType: 'top',
+        starposFinish: false,
         img: '/images/lutavis-thief-top.png',        
         upgradeCount: 7,
     },
