@@ -134,6 +134,7 @@ export const equipData :ItemInfo[] = [
         img: '/images/sword.png',     
         upgradeCount: 5,   
     },
+    
     // 카루타 
     {
         type: 'equip',
