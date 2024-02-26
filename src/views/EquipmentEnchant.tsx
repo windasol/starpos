@@ -19,16 +19,11 @@ function EquipmentEnchant({ closeBtn, moveFlag, item }: Props) {
   }
   
 
-  async function test() {
-    // const response = await fetch('http://localhost:5554/test');
-    const dd = await axios.get('http://localhost:5554/test');
-    // const aa = await response.json();
+  async function test() {    
+    const param = {userId: 'admin'};
+    const dd = await axios.get('http://localhost:5554/search',  {params: {userId: 'admin'}});
     console.log(dd.data);
-    // fetch('http://localhost:5554/test', { method : "GET" })      //메소드 방식 지정
-    //   .then(res => res.json())              //json으로 받을 것을 명시
-    //   .then(res => {                        //실제 데이터를 상태변수에 업데이트
-    //       console.log(1, res);            
-    //   }); 
+    
   }
 
   return (
