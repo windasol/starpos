@@ -10,21 +10,21 @@ export type ItemInfo = EquipInfo | SpendInfo | EtcInfo | CashInfo;
 export type itemType = 'equip' | 'spend' | 'etc' | 'cash';
 export interface EquipInfo {    
     type: 'equip'
-    order: number;
+    orders: number;
     name: string;
     level: number;
     starpos: number;
     starposFinish: boolean;
     maxStarpos: number;
     changeCount?: number;
-    upgradeCount?: number;
-    changeYn?: boolean;
+    isChange?: boolean;
+    upgradeCount?: number;    
     potential?: [];
     additional?: [];
     job: string;
     equipType: string;
     stats?: EquipStats;
-    img: string;
+    imgurl: string;
 }
 
 export interface EquipStats {
@@ -43,36 +43,28 @@ export interface EquipStats {
 
 export interface SpendInfo {
     type: 'spend'
-    order: number;
+    orders: number;
     name: string;
     description: string;
     count: number;
-    img: string;
+    imgurl: string;
 }
 
 export interface EtcInfo {
     type: 'etc'
-    order: number;
+    orders: number;
     name: string;
     description: string;
     count: number;
-    img: string;
+    imgurl: string;
 }
 
 export interface CashInfo {
     type: 'cash'
-    order: number;
+    orders: number;
     name: string;
-    level: number;
-    str?: number;
-    dex?: number;
-    int?: number;
-    luk?: number;
-    power?: number;
-    magicPower?: number;
-    bossPower?: number;
-    guardIgnore?: number; 
-    img: string;
+    level: number;    
+    imgurl: string;
 } 
 
 export const statType = ['str', 'dex', 'luk', 'int'];
@@ -116,7 +108,7 @@ export const equipData :ItemInfo[] = [
     // 검
     {
         type: 'equip',
-        order: 1,
+        orders: 1,
         name: '검',
         level: 1,
         starpos: 0,
@@ -131,14 +123,14 @@ export const equipData :ItemInfo[] = [
             // luk: 3,
             power: 15,                                    
         },
-        img: '/images/sword.png',     
+        imgurl: '/images/sword.png',     
         upgradeCount: 5,   
     },
     
     // 카루타 
     {
         type: 'equip',
-        order: 2,
+        orders: 2,
         name: '이글아이 워리어 아머',
         level: 150,
         starpos: 0,
@@ -146,31 +138,31 @@ export const equipData :ItemInfo[] = [
         job: 'warrior',
         equipType: 'top',
         starposFinish: false,
-        img: '/images/lutavis-thief-top.png',        
+        imgurl: '/images/lutavis-thief-top.png',        
         upgradeCount: 7,
     },
     {
         type: 'spend',
-        order: 1,
+        orders: 1,
         name: '빨간포션',
         count: 1,
         description: '이것은 빨간포션 입니다',
-        img: '/images/redportion.png',        
+        imgurl: '/images/redportion.png',        
     },
     {
         type: 'cash',
-        order: 2,
+        orders: 2,
         name: '죽음의 데스',
         level: 0,
-        img: '/images/deathOfDie.png',        
+        imgurl: '/images/deathOfDie.png',        
     },
     {
         type: 'etc',
-        order: 1,
+        orders: 1,
         name: '주문의 흔적',
         count: 9000,
         description: '낡은 종이에 과거에 사용했던 주문의 흔적이 남아있다. 상점에 팔면 약간의 메소를 얻을수 있다.',
-        img: '/images/spellTrace.png',        
+        imgurl: '/images/spellTrace.png',        
     },
 ];
 

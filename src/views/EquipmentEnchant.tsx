@@ -19,10 +19,9 @@ function EquipmentEnchant({ closeBtn, moveFlag, item }: Props) {
   }
   
 
-  async function test() {    
-    const param = {userId: 'admin'};
-    const dd = await axios.get('http://localhost:5554/search',  {params: {userId: 'admin'}});
-    console.log(dd.data);
+  async function test() {        
+    // const dd = await axios.get('http://localhost:5554/api/equip/search',  {params: {userId: 'admin'}});
+    // console.log(dd.data);
     
   }
 

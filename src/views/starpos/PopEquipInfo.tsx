@@ -6,7 +6,8 @@ type Props = {
 }
 
 function PopEquipInfo({ equipInfo }: Props) {
-
+  
+  console.log(equipInfo)
   function showStar() {
     const star = [];
     for (let i = 1; i <= equipInfo.maxStarpos; i++) {
@@ -74,8 +75,8 @@ function PopEquipInfo({ equipInfo }: Props) {
       {showStar()}
       <div style={{ fontWeight: 'bold' }}>{equipInfo.name}</div>
       <div style={{ display: 'flex' }}>
-        <div style={{ width: '50%' }}>
-          <img className="showItemIng" src={equipInfo.img}></img>
+        <div style={{ width: '50%' }}>        
+          <img className="showItemIng" src={equipInfo.imgurl}></img>
         </div>
         <div>
           <div style={{ fontSize: '10px' }}>REQ LEV : {equipInfo.level}</div>
@@ -86,8 +87,8 @@ function PopEquipInfo({ equipInfo }: Props) {
       </div>
       <div style={{ border: '1px solid #464646', width: '100%', borderStyle: 'dotted' }}></div>
       <div style={{ fontSize: '14px', marginRight: '7.5em' }}>장비분류 : {equipInfo.equipType}</div>
-      {showEquipStat()}
-      {showEquipPower()}
+      {/* {showEquipStat()}
+      {showEquipPower()} */}
       <div style={{ fontSize: '14px', marginRight: '7em' }}>업그레이드 가능 횟수 : {equipInfo.upgradeCount}</div>
     </div>
   )

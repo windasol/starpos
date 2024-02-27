@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import {type ItemInfo, equipData, itemType, SpendInfo, EquipInfo, EtcInfo, CashInfo, statIncrease, powerIncrease, statType} from '../common/option/CommonItem';
+import { useEffect, useState } from 'react';
+import {type ItemInfo, equipData, itemType, SpendInfo, EquipInfo, EtcInfo, CashInfo} from '../common/option/CommonItem';
 import { positionType, showType } from '../common/option/typeOption';
 import PopEquipInfo from './starpos/PopEquipInfo';
+import { searchEquip, searchSpend } from '../common/rest/EquipRest';
 
 type Props = {
   row: number;
@@ -16,10 +17,21 @@ type Props = {
 }
 
 function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, moveFlag, dropItem, position} : Props) {
-  const [items] = useState<ItemInfo[]>(equipData);  
+  const [items, setItems] = useState<ItemInfo[]>([]);  
   const [showInfo, setShowInfo] = useState(0);    
   const numRows = row;
   const numColumns = col;
+  
+  useEffect(() => {
+    async function data() {
+      const aa = await searchSpend('admin');
+      console.log(aa);
+      const dd = aa.data;
+      
+      setItems([...dd]);            
+    }
+    data();
+  }, [itemType])
 
   function renderRows() {
     const rows = [];
@@ -37,15 +49,15 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
     return rows;
   }
   
-  function renderColumns (tableRow: number) {
+  function renderColumns (tableRow: number) {    
     const columns = [];
     for (let j = 0; j < numColumns; j++) {
       const now = ((j + 1) + (tableRow * col));
       
-      const item = items.filter((e) => e.type == itemType).find((e) => e.order == now);
+      const item = items.find((e) => e.orders == now);      
       columns.push(        
         <td key={j} className='itemTable' onMouseDown={() => {setShowInfo(0)}} onMouseOver={() => {setShowInfo(now)}} onMouseLeave={() => {setShowInfo(0)}}>          
-          {item ? <img className="itemImg" onDragEnd={(event) => imgDrop(event, item as EquipInfo)} src={item.img}></img> : ''}
+          {item ? <img className="itemImg" onDragEnd={(event) => imgDrop(event, item as EquipInfo)} src={item.imgurl}></img> : ''}
           <span>{item && 'count' in item ? item.count : ''}</span>          
           {item && now == showInfo ? showType(item) : ''}         
         </td>        
