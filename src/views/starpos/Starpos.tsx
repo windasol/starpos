@@ -93,7 +93,7 @@ function Starpos({ item, isResult }: Props) {
       <div className="number">{!isCatch && timeLimit}</div>  
       <div className="percentUp">{percentUp && <p>+ 강화 성공률</p> }</div>  
       <div>     
-        <img src={item?.img} style={{width: '100px', height: '100px'}}></img>
+        <img src={item?.imgUrl} style={{width: '100px', height: '100px'}}></img>
       </div>
       
       <div

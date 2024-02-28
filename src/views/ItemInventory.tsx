@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import {type ItemInfo, equipData, itemType, SpendInfo, EquipInfo, EtcInfo, CashInfo} from '../common/option/CommonItem';
+import {type ItemInfo, itemType, SpendInfo, EquipInfo, EtcInfo, CashInfo} from '../common/option/CommonItem';
 import { positionType, showType } from '../common/option/typeOption';
 import PopEquipInfo from './starpos/PopEquipInfo';
-import { searchEquip, searchSpend } from '../common/rest/EquipRest';
+import { searchItem } from '../common/rest/ItemRest';
 
 type Props = {
   row: number;
@@ -18,19 +18,17 @@ type Props = {
 
 function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, moveFlag, dropItem, position} : Props) {
   const [items, setItems] = useState<ItemInfo[]>([]);  
+  const [isGrap, setIsGrap] = useState(false);
   const [showInfo, setShowInfo] = useState(0);    
   const numRows = row;
   const numColumns = col;
   
   useEffect(() => {
-    async function data() {
-      const aa = await searchSpend('admin');
-      console.log(aa);
-      const dd = aa.data;
-      
-      setItems([...dd]);            
+    async function initItem() {
+      const itemData = await searchItem('admin', itemType);            
+      setItems([...itemData]);            
     }
-    data();
+    initItem();
   }, [itemType])
 
   function renderRows() {
@@ -49,15 +47,40 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
     return rows;
   }
   
+  function clickHandler() {
+    setIsGrap(!isGrap);    
+  }
+
+  function drop() {
+    if (isGrap) {
+      setIsGrap(false);
+    }
+  }
+
+  function moveEvent(event: MouseEvent) {
+    if (isGrap) {
+      console.log(event);
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("mousemove", moveEvent);
+    window.addEventListener("click", drop);
+    return () => {
+      window.removeEventListener("mousemove", moveEvent);
+      window.addEventListener("click", drop);
+    };
+  });
+
+
   function renderColumns (tableRow: number) {    
     const columns = [];
     for (let j = 0; j < numColumns; j++) {
-      const now = ((j + 1) + (tableRow * col));
-      
+      const now = ((j + 1) + (tableRow * col));      
       const item = items.find((e) => e.orders == now);      
       columns.push(        
-        <td key={j} className='itemTable' onMouseDown={() => {setShowInfo(0)}} onMouseOver={() => {setShowInfo(now)}} onMouseLeave={() => {setShowInfo(0)}}>          
-          {item ? <img className="itemImg" onDragEnd={(event) => imgDrop(event, item as EquipInfo)} src={item.imgurl}></img> : ''}
+        <td key={j} className='itemTable' onMouseDown={() => {setShowInfo(0)}} onMouseOver={() => {setShowInfo(now)}} onMouseLeave={() => {setShowInfo(0)}} onClick={() => clickHandler()} >          
+          {item ? <img className="itemImg" onDragEnd={(event) => imgDrop(event, item as EquipInfo)} src={item.imgUrl}></img> : ''}
           <span>{item && 'count' in item ? item.count : ''}</span>          
           {item && now == showInfo ? showType(item) : ''}         
         </td>        
@@ -67,7 +90,7 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
     return columns;
   }
   
-  function imgDrop(e: React.DragEvent<HTMLImageElement>, item: EquipInfo) {
+  function imgDrop(e: React.DragEvent, item: EquipInfo) {
     if (showFlag.enchant) {
       const x = e.clientX;
       const y = e.clientY;
@@ -100,7 +123,7 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
       <div className='itemInfo'>      
         <p>{info.name}</p>
         <p>{info.description}</p>
-        <img className="showItemIng" src={info.img}></img>               
+        <img className="showItemIng" src={info.imgUrl}></img>               
       </div>
     )
   }
@@ -110,7 +133,7 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
       <div className='itemInfo'>      
         <p>{info.name}</p>
         <p>{info.description}</p>    
-        <img className="showItemIng" src={info.img}></img>                    
+        <img className="showItemIng" src={info.imgUrl}></img>                    
     </div>
     )
   }
@@ -119,7 +142,7 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
     return (
       <div className='itemInfo'>      
       <p>{info.name}</p>                
-      <img className="showItemIng" src={info.img}></img>
+      <img className="showItemIng" src={info.imgUrl}></img>
     </div>
     )
   }

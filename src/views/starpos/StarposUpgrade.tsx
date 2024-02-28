@@ -1,11 +1,12 @@
 import { useRef, useState } from "react";
 import StarposEffect from "./StarposEffect";
 import { nextTick } from "process";
-import { EquipInfo, destroyPercentage, failPercentage, statIncrease, statType, successPercentage } from "../../common/option/CommonItem";
+import { EquipInfo, baseStat, destroyPercentage, equipLevelType, failPercentage, statIncrease, successPercentage } from "../../common/option/CommonItem";
 import PopEquipInfo from "./PopEquipInfo";
 import Starpos from "./Starpos";
 import StarposConfirm from "./StarposConfirm";
 import StarposResult from "./StarposResult";
+import { upgradeEquip } from "../../common/rest/ItemRest";
 
 type Props = {
   closeBtn: (flag: boolean) => void;
@@ -25,9 +26,8 @@ function EnchantUpgrade({ closeBtn, item, finish }: Props) {
   const percentUp = useRef(false);
 
   function starposStat() {
-    if (item) {
-      type levelType = 130 | 140 | 150 | 160 | 200;
-      const level = Math.floor(item.level / 10) * 10 as levelType;
+    if (item) {      
+      const level = Math.floor(item.level / 10) * 10 as equipLevelType;
       return statIncrease[level < 130 ? 130 : level][item.starpos];
     }
   }
@@ -74,9 +74,9 @@ function EnchantUpgrade({ closeBtn, item, finish }: Props) {
           left={left}
           clear={() =>
             nextTick(() => {
+              percentCal();
               setEcffect(false);
               setResultPop(true);
-              percentCal();
             })
           }
         />
@@ -104,35 +104,41 @@ function EnchantUpgrade({ closeBtn, item, finish }: Props) {
       // 파괴확률 없을때
       if (item.starpos < 15) {
         if (randomValue < success) {
-          item.starpos += 1;
+          item.starpos += 1;                    
           setResult("성공");
-        } else {
-          setResult("실패");
+        } else {          
+          setResult("실패");    
         }
       } else {
         if (randomValue < success) {
-          item.starpos += 1;
+          item.starpos += 1;          
           setResult("성공");
         } else if (randomValue < success + fail) {
           if (starpos % 5 != 0) {
             item.starpos -= 1;
           }
-          setResult("실패");
+          setResult("실패");          
         } else {
           if (destroyDefend) {
             setResult("실패");  
           } else {
-            item.starpos = -999;
+            item.destroy = true;
             setResult("파괴");
           }
         }
       }
 
       if(item.starpos == item.maxStarpos) {
-        item.starposFinish = true;
+        item.starposFinish = true;        
         finish();
       }
+
+      upgrade();
     }
+  }
+
+  async function upgrade() {    
+    await upgradeEquip(item);
   }
 
   return (
@@ -142,7 +148,7 @@ function EnchantUpgrade({ closeBtn, item, finish }: Props) {
         <div style={{ width: "50%" }}>
           <img
             style={{ width: "100px", height: "100px" }}
-            src={item.img}
+            src={item.imgUrl}
             id="enchantImg"
             onMouseOver={() => setShowInfo(true)}
             onMouseLeave={() => setShowInfo(false)}
@@ -165,7 +171,7 @@ function EnchantUpgrade({ closeBtn, item, finish }: Props) {
             {item.starpos >= 15 ? `파괴확률 : ${destroyPercentage[item.starpos ?? 0]} %` : ''}
           </div>
           <div>
-            {statType.map((e) => <div key={e}>{e.toUpperCase()} : +{starposStat()}</div>)}
+            {baseStat.map((e) => <div key={e}>{e.toUpperCase()} : +{starposStat()}</div>)}
           </div>
         </div>
       </div>

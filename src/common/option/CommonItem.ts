@@ -10,6 +10,7 @@ export type ItemInfo = EquipInfo | SpendInfo | EtcInfo | CashInfo;
 export type itemType = 'equip' | 'spend' | 'etc' | 'cash';
 export interface EquipInfo {    
     type: 'equip'
+    seq: number;
     orders: number;
     name: string;
     level: number;
@@ -18,19 +19,20 @@ export interface EquipInfo {
     maxStarpos: number;
     changeCount?: number;
     isChange?: boolean;
-    upgradeCount?: number;    
+    upgradeCount?: number;  
+    destroy: boolean;  
     potential?: [];
     additional?: [];
     job: string;
     equipType: string;
-    stats?: EquipStats;
-    imgurl: string;
+    stats?: Stats;
+    imgUrl: string;
 }
 
-export interface EquipStats {
+export interface Stats {        
     str?: number;
     dex?: number;
-    int?: number;
+    ints?: number;
     luk?: number;
     power?: number;
     maxHp?: number;
@@ -47,7 +49,7 @@ export interface SpendInfo {
     name: string;
     description: string;
     count: number;
-    imgurl: string;
+    imgUrl: string;
 }
 
 export interface EtcInfo {
@@ -56,7 +58,7 @@ export interface EtcInfo {
     name: string;
     description: string;
     count: number;
-    imgurl: string;
+    imgUrl: string;
 }
 
 export interface CashInfo {
@@ -64,10 +66,12 @@ export interface CashInfo {
     orders: number;
     name: string;
     level: number;    
-    imgurl: string;
+    imgUrl: string;
 } 
 
-export const statType = ['str', 'dex', 'luk', 'int'];
+export const baseStat = ['str', 'dex', 'luk', 'ints'];
+export type baseStatType = 'str' | 'dex' | 'dex' | 'ints';
+export type equipLevelType = 130 | 140 | 150 | 160 | 200;     
                     
 export const successPercentage = [95,90,85,85,80,75,70,65,60,55,50,45,40,35,30,30,30,30,30,30,30,30,30,3,2,1];
 export const failPercentage = [5,10,15,15,20,25,30,35,40,45,50,55,60,65,70,67.9,67.9,67.2,67.2,0,63,77.6,68.6,59.4];
