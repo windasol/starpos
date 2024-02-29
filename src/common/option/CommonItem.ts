@@ -44,12 +44,14 @@ export interface Stats {
 }
 
 export interface SpendInfo {
+    seq: number;
     type: 'spend'
     orders: number;
     name: string;
     description: string;
     count: number;
     imgUrl: string;
+    userId: string;
 }
 
 export interface EtcInfo {

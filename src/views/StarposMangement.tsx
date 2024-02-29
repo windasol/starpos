@@ -33,7 +33,7 @@ function EnchantMangement() {
   });
 
   return (    
-    <div>
+    <div>      
       <div style={{backgroundImage: 'url(/images/henesis.png)'}}></div>
       {showFlag.item && (
         <Dragable

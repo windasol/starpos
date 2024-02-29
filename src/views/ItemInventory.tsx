@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import {type ItemInfo, itemType, SpendInfo, EquipInfo, EtcInfo, CashInfo} from '../common/option/CommonItem';
-import { positionType, showType } from '../common/option/typeOption';
+import { coordinate, positionType, showType } from '../common/option/typeOption';
 import PopEquipInfo from './starpos/PopEquipInfo';
-import { searchItem } from '../common/rest/ItemRest';
+import { searchItem, upgradeEquip, upgradeItem } from '../common/rest/ItemRest';
+import DragImage from '../common/component/DragImage';
 
 type Props = {
   row: number;
@@ -19,23 +20,24 @@ type Props = {
 function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, moveFlag, dropItem, position} : Props) {
   const [items, setItems] = useState<ItemInfo[]>([]);  
   const [isGrap, setIsGrap] = useState(false);
-  const [showInfo, setShowInfo] = useState(0);    
-  const numRows = row;
-  const numColumns = col;
+  const [grapPosition, setGrapPosition] = useState<coordinate>({x: 0, y:0});
+  const [grapItem, setGrapItem] = useState<ItemInfo>()
+  const [showInfo, setShowInfo] = useState(0);      
   
+  async function initItem() {
+    const itemData = await searchItem('admin', itemType);            
+    setItems([...itemData]);            
+  }
+
   useEffect(() => {
-    async function initItem() {
-      const itemData = await searchItem('admin', itemType);            
-      setItems([...itemData]);            
-    }
     initItem();
   }, [itemType])
 
   function renderRows() {
     const rows = [];
-    for (let i = 0; i < numRows; i++) {
+    for (let i = 0; i < row; i++) {
       rows.push(        
-          <table key={i}>
+          <table key={i} style={{marginLeft: '0.2em'}}>
             <tbody>
               <tr className='itemTable'>
                 {renderColumns(i)}
@@ -47,42 +49,24 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
     return rows;
   }
   
-  function clickHandler() {
-    setIsGrap(!isGrap);    
-  }
-
-  function drop() {
-    if (isGrap) {
-      setIsGrap(false);
+  function itemGrap(event: React.MouseEvent,item: ItemInfo | undefined) {
+    if(item) {           
+      setGrapPosition({x: event.clientX - 120, y: event.clientY -120});      
+      setGrapItem(item);
+      setIsGrap(!isGrap);
     }
   }
-
-  function moveEvent(event: MouseEvent) {
-    if (isGrap) {
-      console.log(event);
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener("mousemove", moveEvent);
-    window.addEventListener("click", drop);
-    return () => {
-      window.removeEventListener("mousemove", moveEvent);
-      window.addEventListener("click", drop);
-    };
-  });
-
 
   function renderColumns (tableRow: number) {    
     const columns = [];
-    for (let j = 0; j < numColumns; j++) {
+    for (let j = 0; j < col; j++) {
       const now = ((j + 1) + (tableRow * col));      
       const item = items.find((e) => e.orders == now);      
       columns.push(        
-        <td key={j} className='itemTable' onMouseDown={() => {setShowInfo(0)}} onMouseOver={() => {setShowInfo(now)}} onMouseLeave={() => {setShowInfo(0)}} onClick={() => clickHandler()} >          
-          {item ? <img className="itemImg" onDragEnd={(event) => imgDrop(event, item as EquipInfo)} src={item.imgUrl}></img> : ''}
+        <td key={j} className='itemTable' onMouseOver={() => {setShowInfo(now)}} onMouseLeave={() => {setShowInfo(0)}} onClick={(event) => itemGrap(event, item)} style={{cursor: isGrap ? 'grabbing' : 'pointer'}} id={`${now}`}>                          
+          {item ? <img className="itemImg" src={item.imgUrl}></img> : ''}
           <span>{item && 'count' in item ? item.count : ''}</span>          
-          {item && now == showInfo ? showType(item) : ''}         
+          {!isGrap && item && now == showInfo ? showType(item) : ''}         
         </td>        
       );
     }
@@ -90,18 +74,26 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
     return columns;
   }
   
-  function imgDrop(e: React.DragEvent, item: EquipInfo) {
-    if (showFlag.enchant) {
-      const x = e.clientX;
-      const y = e.clientY;
-      
-      const endX = position.enchant.x + 343;
-      const endY = position.enchant.y + 283;
-      const startX = position.enchant.x;
-      const startY = position.enchant.y + 30;
-  
-      const check = x >= startX && x <= endX && y >= startY && y <= endY;
-      if (check && item.type == 'equip') dropItem(item);                  
+  async function imgDrop(e: coordinate) {
+    await setIsGrap(false);      
+    const x = e.x + 120;
+    const y = e.y + 120;    
+    const element = document.elementFromPoint(x, y);    
+    const elementId = element?.id;   
+
+    if (elementId !== '') {      
+      const data = {...grapItem, orders: Number(elementId)} as ItemInfo;          
+      await upgradeItem(data, itemType);
+      await initItem();
+    } else {  
+      if (showFlag.enchant) {                  
+        const endX = position.enchant.x + 343;
+        const endY = position.enchant.y + 283;
+        const startX = position.enchant.x;
+        const startY = position.enchant.y + 30;
+        const check = x >= startX && x <= endX && y >= startY && y <= endY;
+        if (check && grapItem!.type == 'equip') dropItem(grapItem);                        
+      }
     }
   }
   
@@ -162,8 +154,9 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
         <button className="itemButton" style={typeStyle('spend')} onClick={() => setItemType('spend')}>소비</button>
         <button className="itemButton" style={typeStyle('etc')} onClick={() => setItemType('etc')}>기타</button>
         <button className="itemButton" style={typeStyle('cash')} onClick={() => setItemType('cash')}>캐쉬</button>
-        {renderRows()}    
-    </div>                
+        {renderRows()} 
+        {isGrap && <DragImage grapImg={grapItem!.imgUrl} isGrap={isGrap} itemDrop={(e) => imgDrop(e)} position={grapPosition}/>}
+    </div>           
   )
 }
 

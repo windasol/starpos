@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { type coordinate } from "../option/typeOption";
-interface Props {
+
+type Props = {
   htmlContent: ReactNode;
   initPosition: coordinate;
   remindPosition: (position: coordinate) => void;        

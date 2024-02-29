@@ -71,11 +71,11 @@
 //   );
   
 //   INSERT INTO starpos.equip_info
-//   (seq, `type`, orders, name, level, img_url, starpos, starpos_finish, max_starpos, change_count, is_change, upgrade_count, job, equip_type, user_id)
-//   VALUES(1, 'equip', 1, '이글아이 워리어 아머', 150, '/images/lutavis-thief-top.png', 0, 0, 25, 0, 0, 0, 'warrior', 'top', 'admin');
+//   (seq, `type`, orders, name, `level`, img_url, starpos, starpos_finish, max_starpos, change_count, is_change, upgrade_count, job, equip_type, destroy, user_id)
+//   VALUES(1, 'equip', 1, '이글아이 워리어 아머', 150, '/images/lutavis-thief-top.png', 0, 0, 25, 0, 0, 0, 'warrior', 'top', 0, 'admin');
 //   INSERT INTO starpos.equip_info
-//   (seq, `type`, orders, name, level, img_url, starpos, starpos_finish, max_starpos, change_count, is_change, upgrade_count, job, equip_type, user_id)
-//   VALUES(2, 'equip', 2, '검', 1, '/images/sword.png', 0, 0, 5, 0, 0, 0, 'all', 'weapon', 'admin');
+//   (seq, `type`, orders, name, `level`, img_url, starpos, starpos_finish, max_starpos, change_count, is_change, upgrade_count, job, equip_type, destroy, user_id)
+//   VALUES(2, 'equip', 2, '검', 1, '/images/sword.png', 0, 0, 5, 0, 0, 0, 'all', 'weapon', 0, 'admin');
   
 //   INSERT INTO starpos.spend_info
 //   (seq, `type`, orders, name, description, count, img_url, user_id)
@@ -93,10 +93,10 @@
 //   INSERT INTO starpos.stats
 //   (item_seq, str, dex, ints, luk, power, max_hp, max_mp, all_stat, magic_power, boss_power, guard_ignore)
 //   VALUES(2, 20, 20, 20, 20, 20, 10, 10, 10, 10, 10, 10);
-  
+
 const baseUrl = 'http://localhost:5554/api/item';
 import axios from "axios";
-import { EquipInfo } from "../option/CommonItem";
+import { ItemInfo } from "../option/CommonItem";
 
 export async function searchItem(userId: string, type: string) {
     const url = `${baseUrl}/search-${type}`    
@@ -107,8 +107,8 @@ export async function searchItem(userId: string, type: string) {
     }
 }
 
-export async function upgradeEquip(equip: EquipInfo) {
-    const url = `${baseUrl}/upgrade-equip`    
+export async function upgradeItem(equip: ItemInfo, type: string) {
+    const url = `${baseUrl}/upgrade-${type}`    
     try {
         return (await axios.post(url,  equip)).data;
     } catch(e) {

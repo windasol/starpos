@@ -6,7 +6,7 @@ import PopEquipInfo from "./PopEquipInfo";
 import Starpos from "./Starpos";
 import StarposConfirm from "./StarposConfirm";
 import StarposResult from "./StarposResult";
-import { upgradeEquip } from "../../common/rest/ItemRest";
+import { upgradeEquip, upgradeItem } from "../../common/rest/ItemRest";
 
 type Props = {
   closeBtn: (flag: boolean) => void;
@@ -138,7 +138,7 @@ function EnchantUpgrade({ closeBtn, item, finish }: Props) {
   }
 
   async function upgrade() {    
-    await upgradeEquip(item);
+    await upgradeItem(item, 'equip');
   }
 
   return (
