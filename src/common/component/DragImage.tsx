@@ -38,7 +38,7 @@ const DragImage = ({grapImg, isGrap, position, itemDrop} : Props) => {
           className='itemImg'
           src={grapImg}
           alt="Draggable"
-          style={{ position: 'absolute', left: `${imagePosition.x}px`, top: `${imagePosition.y}px`, zIndex: '999', cursor: 'grabbing'}}
+          style={{ position: 'absolute', left: `${imagePosition.x}px`, top: `${imagePosition.y}px`, zIndex: '999', cursor: 'grabbing', opacity: 0.7}}
         />
       )}
     </div>

@@ -6,7 +6,7 @@ import PopEquipInfo from "./PopEquipInfo";
 import Starpos from "./Starpos";
 import StarposConfirm from "./StarposConfirm";
 import StarposResult from "./StarposResult";
-import { upgradeEquip, upgradeItem } from "../../common/rest/ItemRest";
+import { upgradeItem } from "../../common/rest/ItemRest";
 
 type Props = {
   closeBtn: (flag: boolean) => void;

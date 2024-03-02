@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import {type ItemInfo, itemType, SpendInfo, EquipInfo, EtcInfo, CashInfo} from '../common/option/CommonItem';
 import { coordinate, positionType, showType } from '../common/option/typeOption';
 import PopEquipInfo from './starpos/PopEquipInfo';
-import { searchItem, upgradeEquip, upgradeItem } from '../common/rest/ItemRest';
+import { searchItem, upgradeItem } from '../common/rest/ItemRest';
 import DragImage from '../common/component/DragImage';
 
 type Props = {
@@ -21,8 +21,9 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
   const [items, setItems] = useState<ItemInfo[]>([]);  
   const [isGrap, setIsGrap] = useState(false);
   const [grapPosition, setGrapPosition] = useState<coordinate>({x: 0, y:0});
-  const [grapItem, setGrapItem] = useState<ItemInfo>()
+  const [grapItem, setGrapItem] = useState<ItemInfo>();
   const [showInfo, setShowInfo] = useState(0);      
+  const [switchs, setSwitchs] = useState(true);
   
   async function initItem() {
     const itemData = await searchItem('admin', itemType);            
@@ -64,7 +65,7 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
       const item = items.find((e) => e.orders == now);      
       columns.push(        
         <td key={j} className='itemTable' onMouseOver={() => {setShowInfo(now)}} onMouseLeave={() => {setShowInfo(0)}} onClick={(event) => itemGrap(event, item)} style={{cursor: isGrap ? 'grabbing' : 'pointer'}} id={`${now}`}>                          
-          {item ? <img className="itemImg" src={item.imgUrl}></img> : ''}
+          {item && switchs ? <img className="itemImg" src={item.imgUrl} style={{opacity: 'destroy' in item ? item.destroy ? 0.5 : 1 : 1}}></img> : ''}
           <span>{item && 'count' in item ? item.count : ''}</span>          
           {!isGrap && item && now == showInfo ? showType(item) : ''}         
         </td>        
@@ -75,14 +76,22 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
   }
   
   async function imgDrop(e: coordinate) {
+    await setSwitchs(false);
     await setIsGrap(false);      
     const x = e.x + 120;
     const y = e.y + 120;    
     const element = document.elementFromPoint(x, y);    
-    const elementId = element?.id;   
+    const orders = Number(element?.id);          
 
-    if (elementId !== '') {      
-      const data = {...grapItem, orders: Number(elementId)} as ItemInfo;          
+    if (orders !== 0 && !isNaN(orders)) {      
+      let data = {...grapItem, orders: orders} as ItemInfo;
+      const duplication = items.find((e) => e.orders == orders);      
+      if (duplication) {        
+        const dupl = {...duplication, orders: grapItem!.orders};
+        data = {...data, orders: orders};        
+        await upgradeItem(dupl, itemType);      
+      }
+      
       await upgradeItem(data, itemType);
       await initItem();
     } else {  
@@ -95,6 +104,7 @@ function ItemInventory({row, col, itemType, showFlag, setItemType, closeBtn, mov
         if (check && grapItem!.type == 'equip') dropItem(grapItem);                        
       }
     }
+    await setSwitchs(true);
   }
   
   function showType(info:ItemInfo) {     

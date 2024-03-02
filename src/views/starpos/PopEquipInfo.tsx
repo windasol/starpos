@@ -11,7 +11,7 @@ function PopEquipInfo({ equipInfo }: Props) {
     const star = [];
     for (let i = 1; i <= equipInfo.maxStarpos; i++) {
       if (i == 16) star.push(<br key={i + 500} />);
-      i > equipInfo.starpos ? star.push(<img src='/images/noneStar.png' style={{ width: '13px', height: '13px' }} key={i} />)
+      i > equipInfo.starpos ? star.push(<img src='/images/noneStar.png' style={{ width: '13px', height: '13px'}} key={i} />)
         : star.push(<img src='/images/star.png' style={{ width: '13px', height: '13px' }} key={i} />);
       if (i % 5 == 0) star.push(<span key={i + 100}> </span>);
     }
@@ -69,10 +69,10 @@ function PopEquipInfo({ equipInfo }: Props) {
   return (
     <div className='itemInfo' style={{ backgroundColor: 'black', color: 'white', borderRadius: '10px' }}>
       {showStar()}
-      <div style={{ fontWeight: 'bold' }}>{equipInfo.name}</div>
+      <div style={{ fontWeight: 'bold', color : equipInfo.destroy ? 'gray' : 'white' }}>{equipInfo.name} {equipInfo.destroy ? '의 흔적' : ''}</div>
       <div style={{ display: 'flex' }}>
         <div style={{ width: '50%' }}>        
-          <img className="showItemIng" src={equipInfo.imgUrl}></img>
+          <img className="showItemIng" src={equipInfo.imgUrl} style={{opacity: equipInfo.destroy ? 0.3: 1}}></img>
         </div>
         <div>
           <div style={{ fontSize: '10px' }}>REQ LEV : {equipInfo.level}</div>

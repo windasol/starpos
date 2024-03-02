@@ -14,7 +14,7 @@ function EquipmentEnchant({ closeBtn, moveFlag, item }: Props) {
   const [btnType, setBtnType] = useState(item?.starposFinish ? 'c' : 'b')
 
   function typeStyle(type: string) {
-    return btnType == type ? { backgroundColor: 'green' } : {};
+    return btnType == type ? { backgroundColor: '#008080'} : {color: item?.starposFinish ? 'gray' : 'white'};
   }    
 
   return (
