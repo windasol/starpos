@@ -69,6 +69,18 @@
 //       `guard_ignore` int DEFAULT null,
 //       PRIMARY KEY (`item_seq`)
 //   );
+
+// create table `uesrs` (
+//     `user_seq` int NOT NULL AUTO_INCREMENT,
+//     `user_id` varchar(250)  not null,
+//     `user_pw` varchar(250)  not null,
+//     `email` varchar(250) DEFAULT null,
+//     `phone` int  not null,
+//     `name` varchar(250) DEFAULT null,
+//     `isLogin` TINYINT(1) DEFAULT null,
+//     `status` varchar(10) not null,
+//     PRIMARY KEY (`user_seq`)
+// );
   
 //   INSERT INTO starpos.equip_info
 //   (seq, `type`, orders, name, `level`, img_url, starpos, starpos_finish, max_starpos, change_count, is_change, upgrade_count, job, equip_type, destroy, user_id)
