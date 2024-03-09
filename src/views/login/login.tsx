@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate  = useNavigate();
 
   function handleLogin() {
 
@@ -29,6 +31,7 @@ function login() {
           </div>
           <div>
             <button type="button" onClick={handleLogin}>로그인</button>
+            <button type="button" onClick={() => navigate('/join')}>회원가입</button>
           </div>   
       </form>
     </div>
