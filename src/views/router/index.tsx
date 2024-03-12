@@ -1,7 +1,7 @@
 import App from "../../App";
 import Login from "../login/login";
 
-export const router = [
+export const baseRoute = [
     {
         path: "/starpos",
         element: <App/>,
