@@ -139,6 +139,7 @@ function EnchantUpgrade({ closeBtn, item, finish }: Props) {
 
   async function upgrade() {    
     await upgradeItem(item, 'equip');
+    
   }
 
   return (
